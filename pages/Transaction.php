@@ -1,0 +1,48 @@
+<?php 
+
+include("components/header.php");
+$getTransaction = $query->getAll('transaction');
+
+?>
+<h3 class="text-primary">Transaction</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Transaction Code</th>
+            <th>Custodian</th>
+            <th>Student</th>
+            <th>Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        if($getTransaction->num_rows > 0) {
+            while($transaction = $getTransaction->fetch_assoc()) {
+                ?>
+                <tr>
+                    <td><?= $transaction['ID'] ?></th>
+                    <td><?= $transaction['TRANSACTION_CODE'] ?></th>
+                    <td><?= $transaction['CUSTODIAN_ID'] ?></th>
+                    <td><?= $transaction['STUDENT_ID'] ?></th>
+                    <td><?= (new DateTime($transaction['DATE']))->format('F j, Y') ?></td>
+                    <td><?= (new DateTime($transaction['DUEDATE']))->format('F j, Y') ?></td>
+                    <td><?= $transaction['STATUS'] ?></th>
+                </tr>
+                <?php
+            }
+        } else {
+            ?>
+            <tr>
+                <td colspan="7" class="text-center">
+                    No Data Found!
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </tbody>
+</table>
+<?php include("components/footer.php") ?>

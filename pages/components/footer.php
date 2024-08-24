@@ -1,0 +1,10 @@
+</div>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/SideBar.js"></script>
+<script src="js/Functions.js"></script>
+<script src="js/Students.js"></script>
+</body>
+</html>
