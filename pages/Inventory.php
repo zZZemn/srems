@@ -4,7 +4,7 @@ include("components/header.php");
 $getInventory = $query->getAll('inventory');
 
 ?>
-<h3 class="text-primary">Inventory</h3>
+<h4 class="text-primary">Inventory</h4>
 <table class="table table-striped">
     <thead>
         <tr>

@@ -4,7 +4,7 @@ include("components/header.php");
 $getTransaction = $query->getAll('transaction');
 
 ?>
-<h3 class="text-primary">Transaction</h3>
+<h4 class="text-primary">Transaction</h4>
 <table class="table table-striped">
     <thead>
         <tr>
