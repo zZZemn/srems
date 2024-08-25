@@ -5,7 +5,7 @@ $getInventory = $query->getAll('inventory');
 
 ?>
 <h4 class="text-primary">Inventory</h4>
-<table class="table table-striped">
+<table class="table table-striped" style="font-size: 12px;">
     <thead>
         <tr>
             <th>ID</th>

@@ -5,7 +5,7 @@ $getTransaction = $query->getAll('transaction');
 
 ?>
 <h4 class="text-primary">Transaction</h4>
-<table class="table table-striped">
+<table class="table table-striped" style="font-size: 12px;">
     <thead>
         <tr>
             <th>ID</th>
