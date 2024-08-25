@@ -85,4 +85,21 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+    public function editStudent($post)
+    {
+        $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("ssssi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['ID']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 }

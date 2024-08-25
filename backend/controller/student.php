@@ -11,6 +11,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
     if ($reqType == 'ADDSTUDENT') {
         echo $query->addStudent($_POST);
+    } elseif ($reqType == 'EDITSTUDENT') {
+        echo $query->editStudent($_POST);
     } else {
         echo 400;
     }
