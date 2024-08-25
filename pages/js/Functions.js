@@ -29,6 +29,23 @@ const loadList = (table, callback) => {
     },
     error: function (xhr, status, error) {
       console.error("AJAX Error: " + status + ": " + error);
-    }
+    },
+  });
+};
+
+const getBarrowedQty = (invId, callback) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "GETBARROWEDQTY",
+      ID: invId,
+    },
+    success: function (response) {
+      callback(response);
+    },
+    error: function (xhr, status, error) {
+      console.error("AJAX Error: " + status + ": " + error);
+    },
   });
 };

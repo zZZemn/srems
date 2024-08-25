@@ -67,7 +67,6 @@ class Query extends db_connect
 
 
     // Students
-
     public function addStudent($post)
     {
         $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `STATUS`) VALUES (?, ?, ?, ?, 'ACTIVE')");
@@ -112,6 +111,27 @@ class Query extends db_connect
 
             if ($query->execute()) {
                 return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+    // Transaction details
+    public function getTransactionDetailsUsingInvId($invId)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `transaction_details` WHERE `INV_ID` = ?");
+
+        if ($query) {
+
+            $query->bind_param('i', $invId);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
             } else {
                 die("Execution failed: " . $query->error);
             }
