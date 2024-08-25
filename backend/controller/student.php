@@ -13,6 +13,18 @@ if (isset($_POST['REQUEST_TYPE'])) {
         echo $query->addStudent($_POST);
     } elseif ($reqType == 'EDITSTUDENT') {
         echo $query->editStudent($_POST);
+    } elseif ($reqType == 'DEACTIVATE') {
+        $id = $_POST['ID'];
+        $status = $_POST['STATUS'];
+
+        if ($status == 'ACTIVE') {
+            $newStatus = 'INACTIVE';
+        } else {
+            $newStatus = 'ACTIVE';
+        }
+
+        echo $query->deactivateStudent($newStatus, $id);
+
     } else {
         echo 400;
     }

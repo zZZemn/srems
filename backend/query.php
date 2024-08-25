@@ -102,4 +102,21 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+    public function deactivateStudent($status, $id)
+    {
+        $query = $this->conn->prepare("UPDATE `students` SET `STATUS` = ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("si", $status, $id);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 }

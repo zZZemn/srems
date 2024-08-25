@@ -30,11 +30,16 @@ const loadStudent = () => {
           .attr("data-studentcontactno", student.CONTACT_NO);
 
         const $deactivateButton = $("<button>")
-          .text("Deactivate")
-          .addClass("btn btn-danger btn-sm")
+          .addClass(
+            student.STATUS === "ACTIVE"
+              ? "btn btn-danger btn-sm"
+              : "btn btn-success btn-sm"
+          )
+          .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
           .css("font-size", "12px")
           .attr("id", "btnDeactivate")
-          .attr("data-id", student.ID);
+          .attr("data-id", student.ID)
+          .attr("data-status", student.STATUS);
 
         $actionTd.append($editButton).append(" ").append($deactivateButton);
 
@@ -129,6 +134,36 @@ $("#formEditStudent").submit(function (e) {
         loadStudent();
       } else {
         AlertMessage("alert-danger", "Failed to edit!");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
+  });
+});
+// End
+
+// Deactivate
+$(document).on("click", "#btnDeactivate", function (e) {
+  const ID = $(this).data("id");
+  const STATUS = $(this).data("status");
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/student.php",
+    data: {
+      REQUEST_TYPE: "DEACTIVATE",
+      ID: ID,
+      STATUS: STATUS,
+    },
+    success: function (response) {
+      console.log(response);
+
+      if (response == 200) {
+        AlertMessage("alert-success", "Student status change");
+        loadStudent();
+      } else {
+        AlertMessage("alert-danger", "Failed to change statu!");
       }
     },
     error: function (xhr, status, error) {
