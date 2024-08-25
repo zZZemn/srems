@@ -5,6 +5,3 @@
 
 <script src="js/SideBar.js"></script>
 <script src="js/Functions.js"></script>
-<script src="js/Students.js"></script>
-</body>
-</html>

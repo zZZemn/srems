@@ -46,3 +46,5 @@ $getTransaction = $query->getAll('transaction');
     </tbody>
 </table>
 <?php include("components/footer.php") ?>
+</body>
+</html>

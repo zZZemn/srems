@@ -20,31 +20,8 @@ $getStudents = $query->getAll('students');
             <th>Status</th>
         </tr>
     </thead>
-    <tbody>
-        <?php
-        if ($getStudents->num_rows > 0) {
-            while ($student = $getStudents->fetch_assoc()) {
-        ?>
-                <tr>
-                    <td><?= $student['ID'] ?></td>
-                    <td><?= $student['STUDENT_CODE'] ?></td>
-                    <td><?= $student['NAME'] ?></td>
-                    <td><?= $student['EMAIL'] ?></td>
-                    <td><?= $student['CONTACT_NO'] ?></td>
-                    <td><?= $student['STATUS'] ?></td>
-                </tr>
-            <?php
-            }
-        } else {
-            ?>
-            <tr>
-                <td colspan="6" class="text-center">
-                    No Data Found!
-                </td>
-            </tr>
-        <?php
-        }
-        ?>
+    <tbody id="studentTableBody">
+        
     </tbody>
 </table>
 
@@ -84,3 +61,6 @@ $getStudents = $query->getAll('students');
 </div>
 
 <?php include("components/footer.php") ?>
+<script src="js/Students.js"></script>
+</body>
+</html>

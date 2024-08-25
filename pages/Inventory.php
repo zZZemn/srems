@@ -46,3 +46,5 @@ $getInventory = $query->getAll('inventory');
     </tbody>
 </table>
 <?php include("components/footer.php") ?>
+</body>
+</html>
