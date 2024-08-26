@@ -66,10 +66,9 @@ $("#btnAddInventory").click(function (e) {
   $("#ModalAddInventory").modal("show");
 });
 
-
-$("#formAddInventory").submit(function (e) { 
+$("#formAddInventory").submit(function (e) {
   e.preventDefault();
-  
+
   var formData = $(this).serialize();
 
   $.ajax({
@@ -90,7 +89,52 @@ $("#formAddInventory").submit(function (e) {
       console.log("Form submission failed:", status, error);
     },
   });
-
 });
+// End
+
+//Edit inventory
+$(document).on("click", "#btnEditInventory", function (e) {
+  e.preventDefault();
+
+  const ID = $(this).data("id");
+  const INV_CODE = $(this).data("invcode");
+  const ITEM_NAME = $(this).data("itemname");
+  const QTY = $(this).data("qty");
+  const CATEGORY = $(this).data("category");
+
+  $("#eInventoryId").val(ID);
+  $("#eInventoryCode").val(INV_CODE);
+  $("#eInventoryItem").val(ITEM_NAME);
+  $("#eInventoryQty").val(QTY);
+  $("#eInventoryCategory").val(CATEGORY);
+
+  $("#ModalEditInventory").modal("show");
+});
+
+$("#formEditInventory").submit(function (e) {
+  e.preventDefault();
+
+  var formData = $(this).serialize();
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/inventory.php",
+    data: formData,
+    success: function (response) {
+      if (response == 200) {
+        AlertMessage("alert-success", "Item details edited!");
+        $("#formEditInventory")[0].reset();
+        hideModal();
+        loadInventory();
+      } else {
+        AlertMessage("alert-danger", "Failed to edit!");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
+  });
+});
+// End
 
 loadInventory();

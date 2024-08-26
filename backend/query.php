@@ -139,6 +139,23 @@ class Query extends db_connect
         }
     }
 
+    public function editInventory($post)
+    {
+        $query = $this->conn->prepare("UPDATE `inventory` SET `INV_CODE`= ?, `ITEM_NAME`= ?, `QTY`= ?, `CATEGORY`= ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("ssisi", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['ID']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
     // Transaction details
     public function getTransactionDetailsUsingInvId($invId)

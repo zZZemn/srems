@@ -12,6 +12,9 @@ if (isset($_POST['REQUEST_TYPE'])) {
     if ($reqType == 'ADDINVENTORY') {
 
         echo $query->addInventory($_POST);
+    } elseif ($reqType == 'EDITINVENTORY') {
+
+        echo $query->editInventory($_POST);
     } else {
         echo 400;
     }
