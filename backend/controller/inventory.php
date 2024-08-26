@@ -15,6 +15,17 @@ if (isset($_POST['REQUEST_TYPE'])) {
     } elseif ($reqType == 'EDITINVENTORY') {
 
         echo $query->editInventory($_POST);
+    } elseif ($reqType == 'DEACTIVATE') {
+        $id = $_POST['ID'];
+        $status = $_POST['STATUS'];
+
+        if ($status == 'ACTIVE') {
+            $newStatus = 'INACTIVE';
+        } else {
+            $newStatus = 'ACTIVE';
+        }
+
+        echo $query->deactivateInventory($newStatus, $id);
     } else {
         echo 400;
     }
@@ -31,6 +42,35 @@ if (isset($_POST['REQUEST_TYPE'])) {
         }
 
         echo $totalQtyBarrowed;
+    } elseif ($reqType == 'GETINVENTORYLIST') {
+
+        $getList = $query->getAll('inventory');
+        $inventoryList = [];
+        while ($inv = $getList->fetch_assoc()) {
+            $barrowedQty = 0;
+            $invId = $inv['ID'];
+            $invQty = $inv['QTY'];
+
+            $getTransactionDetailsUsingInvId = $query->getTransactionDetailsUsingInvId($invId);
+            if ($getTransactionDetailsUsingInvId->num_rows > 0) {
+                while ($transactionDetails = $getTransactionDetailsUsingInvId->fetch_assoc()) {
+                    $barrowedQty += $transactionDetails['QTY'];
+                }
+            }
+
+            $inventoryList[] = [
+                'ID' => $invId,
+                'INV_CODE' => $inv['INV_CODE'],
+                'ITEM_NAME' => $inv['ITEM_NAME'],
+                'QTY' => $invQty,
+                'REMAINING_QTY' => $invQty - $barrowedQty,
+                'CATEGORY' => $inv['CATEGORY'],
+                'STATUS' => $inv['STATUS']
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($inventoryList);
     } else {
         echo 400;
     }

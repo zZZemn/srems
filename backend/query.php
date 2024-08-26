@@ -13,7 +13,7 @@ class Query extends db_connect
     // Reusable
     public function getAll($table)
     {
-        $query = $this->conn->prepare("SELECT * FROM `$table`");
+        $query = $this->conn->prepare("SELECT * FROM `$table` ORDER BY `ID` ASC");
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
@@ -145,6 +145,23 @@ class Query extends db_connect
 
         if ($query) {
             $query->bind_param("ssisi", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['ID']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+    public function deactivateInventory($status, $id)
+    {
+        $query = $this->conn->prepare("UPDATE `inventory` SET `STATUS` = ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("si", $status, $id);
 
             if ($query->execute()) {
                 return 200;

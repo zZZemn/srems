@@ -163,7 +163,7 @@ $(document).on("click", "#btnDeactivate", function (e) {
         AlertMessage("alert-success", "Student status change");
         loadStudent();
       } else {
-        AlertMessage("alert-danger", "Failed to change statu!");
+        AlertMessage("alert-danger", "Failed to change status!");
       }
     },
     error: function (xhr, status, error) {

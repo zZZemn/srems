@@ -33,6 +33,22 @@ const loadList = (table, callback) => {
   });
 };
 
+const glLoadInventory = (callback) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "GETINVENTORYLIST",
+    },
+    success: function (response) {
+      callback(response);
+    },
+    error: function (xhr, status, error) {
+      console.error("AJAX Error: " + status + ": " + error);
+    },
+  });
+};
+
 const getBarrowedQty = (invId, callback) => {
   $.ajax({
     type: "GET",

@@ -1,5 +1,5 @@
 const loadInventory = () => {
-  loadList("inventory", function (response) {
+  glLoadInventory(function (response) {
     const $tableBody = $("#inventoryTableBody");
 
     $tableBody.empty();
@@ -7,46 +7,45 @@ const loadInventory = () => {
     if (response.length > 0) {
       $.each(response, function (index, inv) {
         const $row = $("<tr>");
-        getBarrowedQty(inv.ID, function (BarrowedQty) {
-          $row.append($("<td>").text(inv.ID));
-          $row.append($("<td>").text(inv.INV_CODE));
-          $row.append($("<td>").text(inv.ITEM_NAME));
-          $row.append($("<td>").text(inv.QTY));
-          $row.append($("<td>").text(inv.QTY - BarrowedQty));
-          $row.append($("<td>").text(inv.CATEGORY));
-          $row.append($("<td>").text(inv.STATUS));
 
-          const $actionTd = $("<td>").addClass("d-flex");
+        $row.append($("<td>").text(inv.ID));
+        $row.append($("<td>").text(inv.INV_CODE));
+        $row.append($("<td>").text(inv.ITEM_NAME));
+        $row.append($("<td>").text(inv.QTY));
+        $row.append($("<td>").text(inv.REMAINING_QTY));
+        $row.append($("<td>").text(inv.CATEGORY));
+        $row.append($("<td>").text(inv.STATUS));
 
-          const $editButton = $("<button>")
-            .append('<i class="bi bi-pencil-square"></i>')
-            .addClass("btn btn-primary btn-sm me-1")
-            .css("font-size", "12px")
-            .attr("id", "btnEditInventory")
-            .attr("data-id", inv.ID)
-            .attr("data-invcode", inv.INV_CODE)
-            .attr("data-itemname", inv.ITEM_NAME)
-            .attr("data-qty", inv.QTY)
-            .attr("data-category", inv.CATEGORY);
+        const $actionTd = $("<td>").addClass("d-flex");
 
-          const $deactivateButton = $("<button>")
-            .addClass(
-              inv.STATUS === "ACTIVE"
-                ? "btn btn-danger btn-sm"
-                : "btn btn-success btn-sm"
-            )
-            .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
-            .css("font-size", "12px")
-            .attr("id", "btnDeactivate")
-            .attr("data-id", inv.ID)
-            .attr("data-status", inv.STATUS);
+        const $editButton = $("<button>")
+          .append('<i class="bi bi-pencil-square"></i>')
+          .addClass("btn btn-primary btn-sm me-1")
+          .css("font-size", "12px")
+          .attr("id", "btnEditInventory")
+          .attr("data-id", inv.ID)
+          .attr("data-invcode", inv.INV_CODE)
+          .attr("data-itemname", inv.ITEM_NAME)
+          .attr("data-qty", inv.QTY)
+          .attr("data-category", inv.CATEGORY);
 
-          $actionTd.append($editButton).append(" ").append($deactivateButton);
+        const $deactivateButton = $("<button>")
+          .addClass(
+            inv.STATUS === "ACTIVE"
+              ? "btn btn-danger btn-sm"
+              : "btn btn-success btn-sm"
+          )
+          .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+          .css("font-size", "12px")
+          .attr("id", "btnDeactivate")
+          .attr("data-id", inv.ID)
+          .attr("data-status", inv.STATUS);
 
-          $row.append($actionTd);
+        $actionTd.append($editButton).append(" ").append($deactivateButton);
 
-          $tableBody.append($row);
-        });
+        $row.append($actionTd);
+
+        $tableBody.append($row);
       });
     } else {
       const $noDataRow = $("<tr>").append(
@@ -128,6 +127,38 @@ $("#formEditInventory").submit(function (e) {
         loadInventory();
       } else {
         AlertMessage("alert-danger", "Failed to edit!");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
+  });
+});
+// End
+
+// Deactivate
+$(document).on("click", "#btnDeactivate", function (e) {
+  e.preventDefault();
+
+  const ID = $(this).data("id");
+  const STATUS = $(this).data("status");
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "DEACTIVATE",
+      ID: ID,
+      STATUS: STATUS,
+    },
+    success: function (response) {
+      console.log(response);
+
+      if (response == 200) {
+        AlertMessage("alert-success", "Item status change");
+        loadInventory();
+      } else {
+        AlertMessage("alert-danger", "Failed to change status!");
       }
     },
     error: function (xhr, status, error) {
