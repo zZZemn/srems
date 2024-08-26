@@ -120,6 +120,26 @@ class Query extends db_connect
     }
 
 
+    // Inventory
+    public function addInventory($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `STATUS`) VALUES (?, ?, ?, ?, 'ACTIVE')");
+
+        if ($query) {
+
+            $query->bind_param("ssis", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
     // Transaction details
     public function getTransactionDetailsUsingInvId($invId)
     {

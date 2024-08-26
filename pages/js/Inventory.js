@@ -60,4 +60,37 @@ const loadInventory = () => {
   });
 };
 
+// Add Inventory
+$("#btnAddInventory").click(function (e) {
+  e.preventDefault();
+  $("#ModalAddInventory").modal("show");
+});
+
+
+$("#formAddInventory").submit(function (e) { 
+  e.preventDefault();
+  
+  var formData = $(this).serialize();
+
+  $.ajax({
+    url: "../backend/controller/inventory.php",
+    type: "POST",
+    data: formData,
+    success: function (response) {
+      console.log(response);
+      if (response == 200) {
+        AlertMessage("alert-success", "Item Added!");
+        $("#formAddInventory")[0].reset();
+        loadInventory();
+      } else {
+        AlertMessage("alert-danger", "Failed to add!");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
+  });
+
+});
+
 loadInventory();

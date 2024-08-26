@@ -9,7 +9,9 @@ $query = new Query();
 if (isset($_POST['REQUEST_TYPE'])) {
     $reqType = $_POST['REQUEST_TYPE'];
 
-    if ($reqType == '') {
+    if ($reqType == 'ADDINVENTORY') {
+
+        echo $query->addInventory($_POST);
     } else {
         echo 400;
     }
