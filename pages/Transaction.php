@@ -4,7 +4,10 @@ include("components/header.php");
 $getTransaction = $query->getAll('transaction');
 
 ?>
-<h4 class="text-primary">Transaction</h4>
+<div class="d-flex justify-content-between align-items-center">
+    <h4 class="text-primary">Transaction</h4>
+    <a href="TransactionAdd.php" class="btn btn-sm btn-primary" id="btnAddTransaction"><i class="bi bi-plus-lg"></i> Add</a>
+</div>
 <table class="table table-striped" style="font-size: 12px;">
     <thead>
         <tr>

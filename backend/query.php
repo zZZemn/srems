@@ -119,6 +119,25 @@ class Query extends db_connect
         }
     }
 
+    public function getStudentByCode($code)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `students` WHERE `STUDENT_CODE` = ?");
+
+        if ($query) {
+
+            $query->bind_param('s', $code);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
     // Inventory
     public function addInventory($post)

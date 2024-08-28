@@ -24,8 +24,22 @@ if (isset($_POST['REQUEST_TYPE'])) {
         }
 
         echo $query->deactivateStudent($newStatus, $id);
-
     } else {
         echo 400;
+    }
+} elseif (isset($_GET['REQUEST_TYPE'])) {
+    $reqType = $_GET['REQUEST_TYPE'];
+
+    if ($reqType == 'GETSTUDENTUSINGCODE') {
+        $getStudent = $query->getStudentByCode($_GET['STUDENT_CODE']);
+
+        if ($getStudent->num_rows > 0) {
+            $student = $getStudent->fetch_assoc();
+            
+            header('Content-Type: application/json');
+            echo json_encode($student);
+        } else {
+            echo "400";
+        }
     }
 }
