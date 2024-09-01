@@ -193,6 +193,25 @@ class Query extends db_connect
     }
 
 
+    // Transaction
+    public function insertTransaction($code, $uId, $sId, $date, $dueDate)
+    {
+        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `STATUS`) VALUES (?, ?, ?, '$date', '$dueDate', 'BARROWED')");
+
+        if ($query) {
+            $query->bind_param('sii', $code, $uId, $sId);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
     // Transaction details
     public function getTransactionDetailsUsingInvId($invId)
     {
@@ -205,6 +224,23 @@ class Query extends db_connect
             if ($query->execute()) {
                 $result = $query->get_result();
                 return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+    public function insertTransactionDetails($tId, $invId, $qty)
+    {
+        $query = $this->conn->prepare("INSERT INTO `transaction_details`(`TRANS_CODE`, `INV_ID`, `QTY`) VALUES (?, ?, ?)");
+
+        if ($query) {
+            $query->bind_param('sii', $tId, $invId, $qty);
+
+            if ($query->execute()) {
+                return 200;
             } else {
                 die("Execution failed: " . $query->error);
             }

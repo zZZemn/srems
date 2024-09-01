@@ -206,5 +206,81 @@ $(document).on("click", ".btn-remove-item-in-list", function (e) {
 
 // Add Item End
 
+$("#frmTransactionAdd").submit(function (e) {
+  e.preventDefault();
+
+  var isInvalidCode = false;
+  var isInvalidDate = false;
+
+  const studCode = $("#studentCode").val();
+  const dueDate = $("#dueDate").val();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const minDate = new Date(today);
+  minDate.setDate(minDate.getDate() + 1);
+
+  const selectedDate = new Date(dueDate);
+
+  if (itemsArray.length < 1) {
+    AlertMessage("alert-danger", "Please select item in the list");
+    return;
+  }
+
+  $.ajax({
+    url: "../backend/controller/student.php",
+    type: "GET",
+    data: {
+      REQUEST_TYPE: "GETSTUDENTUSINGCODE",
+      STUDENT_CODE: studCode,
+    },
+    success: function (response) {
+      console.log("test code: " + response);
+      if (response == 400) {
+        isInvalidCode = true;
+        AlertMessage("alert-danger", "Invalid student code");
+        return;
+      } else {
+        isInvalidCode = false;
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
+  });
+
+  if (selectedDate < minDate) {
+    isInvalidDate = true;
+    AlertMessage("alert-danger", "Invalid due date");
+    return;
+  }
+
+  if (!isInvalidCode && !isInvalidDate) {
+    $.ajax({
+      type: "POST",
+      url: "../backend/controller/transaction.php",
+      data: {
+        REQUEST_TYPE: "INSERTNEWTRANSACTION",
+        STUDENT_CODE: studCode,
+        DUE_DATE: dueDate,
+        ITEMS: JSON.stringify(itemsArray),
+      },
+      success: function (response) {
+        if (response == 200) {
+          AlertMessage("alert-success", "Transaction added!");
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          AlertMessage("alert-danger", "Something went wrong!");
+          return;
+        }
+      },
+    });
+  }
+});
+
 loadAddItemModalContents();
 loadItemsList();

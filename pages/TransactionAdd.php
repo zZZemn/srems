@@ -8,7 +8,7 @@ include("components/header.php");
     <!-- <a href="Transaction.php" class="btn btn-sm btn-primary" id="btnAddTransaction">View Transaction</a> -->
 </div>
 
-<div class="container card mt-2 p-3">
+<form class="container card mt-2 p-3" id="frmTransactionAdd">
     <div class="input-design1">
         <label for="studentCode">Student Code:</label>
         <div class="d-flex">
@@ -47,11 +47,21 @@ include("components/header.php");
             </table>
         </ul>
     </div>
+
+    <div class="container card mt-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6><i class="bi bi-calendar-day"></i> Due Date:</h6>
+        </div>
+
+        <input type="date" class="form-control" required id="dueDate" name="dueDate">
+
+    </div>
+
     <div class="mt-5 d-flex justify-content-end">
         <a href="Transaction.php" class="btn btn-sm btn-dark me-1">Back to list</a>
         <button type="submit" class="btn btn-sm btn-primary">Save</button>
     </div>
-</div>
+</form>
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="ModalTransactionAddItem">
@@ -83,6 +93,7 @@ include("components/header.php");
         </div>
     </div>
 </div>
+
 
 
 <?php include("components/footer.php") ?>

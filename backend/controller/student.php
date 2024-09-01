@@ -35,11 +35,11 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         if ($getStudent->num_rows > 0) {
             $student = $getStudent->fetch_assoc();
-            
+
             header('Content-Type: application/json');
             echo json_encode($student);
         } else {
-            echo "400";
+            echo 400;
         }
     }
 }
