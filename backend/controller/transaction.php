@@ -44,6 +44,9 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
             echo 200;
         }
+    } elseif ($reqType == 'RETURNTRANSCTION') {
+        $id = $_POST['id'];
+        echo $query->changeStatus('transaction', $id, 'RETURNED');
     }
 } elseif (isset($_GET['REQUEST_TYPE'])) {
     $reqType = $_GET['REQUEST_TYPE'];

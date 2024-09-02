@@ -42,6 +42,23 @@ class Query extends db_connect
         }
     }
 
+    public function changeStatus($table, $id, $value)
+    {
+        $query = $this->conn->prepare("UPDATE `$table` SET `STATUS`='$value' WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("i", $id);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
 
     // --
@@ -211,8 +228,45 @@ class Query extends db_connect
         }
     }
 
+    public function getTransactionUsingTransactionCode($tCode)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `transaction` WHERE `TRANSACTION_CODE` = ?");
+
+        if ($query) {
+
+            $query->bind_param('s', $tCode);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 
     // Transaction details
+    public function getTransactionDetailsUsingTransactionCode($tCode)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `transaction_details` WHERE `TRANS_CODE` = ?");
+
+        if ($query) {
+
+            $query->bind_param('s', $tCode);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
     public function getTransactionDetailsUsingInvId($invId)
     {
         $query = $this->conn->prepare("SELECT * FROM `transaction_details` WHERE `INV_ID` = ?");
