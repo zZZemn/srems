@@ -51,6 +51,18 @@ if (isset($_POST['REQUEST_TYPE'])) {
 } elseif (isset($_GET['REQUEST_TYPE'])) {
     $reqType = $_GET['REQUEST_TYPE'];
 
-    if ($reqType == 'GET') {
+    if ($reqType == 'GETTRANSACTIONS') {
+        $search = $_GET['search'];
+        $status = $_GET['status'];
+
+        $result = $query->getTransctionsWSearch($status, $search);
+
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
 }

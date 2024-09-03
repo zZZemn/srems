@@ -8,6 +8,14 @@ $getTransaction = $query->getAll('transaction');
     <h4 class="text-primary">Transaction</h4>
     <a href="TransactionAdd.php" class="btn btn-sm btn-primary" id="btnAddTransaction"><i class="bi bi-plus-lg"></i> Add</a>
 </div>
+<div class="d-flex justify-content-end mt-2">
+    <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
+        <option value="ALL">All</option>
+        <option value="BARROWED">Barrowed</option>
+        <option value="RETURNED">Returned</option>
+    </select>
+    <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
+</div>
 <table class="table table-striped" style="font-size: 12px;">
     <thead>
         <tr>
@@ -20,35 +28,12 @@ $getTransaction = $query->getAll('transaction');
             <th>Status</th>
         </tr>
     </thead>
-    <tbody>
-        <?php
-        if ($getTransaction->num_rows > 0) {
-            while ($transaction = $getTransaction->fetch_assoc()) {
-        ?>
-                <tr>
-                    <td><?= $transaction['ID'] ?></th>
-                    <td><a href="TransactionDetails.php?tId=<?= $transaction['TRANSACTION_CODE'] ?>"><?= $transaction['TRANSACTION_CODE'] ?></a></th>
-                    <td><?= $transaction['CUSTODIAN_ID'] ?></th>
-                    <td><?= $transaction['STUDENT_ID'] ?></th>
-                    <td><?= (new DateTime($transaction['DATE']))->format('F j, Y') ?></td>
-                    <td><?= (new DateTime($transaction['DUEDATE']))->format('F j, Y') ?></td>
-                    <td><?= $transaction['STATUS'] ?></th>
-                </tr>
-            <?php
-            }
-        } else {
-            ?>
-            <tr>
-                <td colspan="7" class="text-center">
-                    No Data Found!
-                </td>
-            </tr>
-        <?php
-        }
-        ?>
+    <tbody id="transactionTableBody">
+
     </tbody>
 </table>
 <?php include("components/footer.php") ?>
+<script src="js/Transaction.js"></script>
 </body>
 
 </html>

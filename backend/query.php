@@ -247,6 +247,55 @@ class Query extends db_connect
         }
     }
 
+
+    public function getTransctionsWSearch($status, $search)
+    {
+        $searchItem = '%' . $search . '%';
+
+        if ($status == 'ALL') {
+            $query = $this->conn->prepare("
+            SELECT t.*, s.NAME, acc.USERNAME
+            FROM `transaction` AS t 
+            JOIN `students` AS s ON t.STUDENT_ID = s.ID 
+            JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
+            WHERE t.TRANSACTION_CODE LIKE ? 
+            OR s.student_code LIKE ? 
+            OR s.NAME LIKE ?
+        ");
+        } else {
+            $query = $this->conn->prepare("
+            SELECT t.*, s.NAME, acc.USERNAME 
+            FROM `transaction` AS t 
+            JOIN `students` AS s ON t.STUDENT_ID = s.ID 
+            JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
+            WHERE (t.TRANSACTION_CODE LIKE ? 
+            OR s.student_code LIKE ? 
+            OR s.NAME LIKE ?)
+            AND t.STATUS = ?
+        ");
+        }
+
+        if ($query) {
+            if ($status == 'ALL') {
+
+                $query->bind_param('sss', $searchItem, $searchItem, $searchItem);
+            } else {
+
+                $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $status);
+            }
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
     // Transaction details
     public function getTransactionDetailsUsingTransactionCode($tCode)
     {
