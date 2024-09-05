@@ -262,6 +262,17 @@ class Query extends db_connect
             OR s.student_code LIKE ? 
             OR s.NAME LIKE ?
         ");
+        } elseif ($status == 'OVERDUE') {
+            $query = $this->conn->prepare("
+            SELECT t.*, s.NAME, acc.USERNAME
+            FROM `transaction` AS t 
+            JOIN `students` AS s ON t.STUDENT_ID = s.ID 
+            JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
+            WHERE (t.TRANSACTION_CODE LIKE ? 
+            OR s.student_code LIKE ? 
+            OR s.NAME LIKE ?)
+            AND t.DUEDATE < CURDATE()
+        ");
         } else {
             $query = $this->conn->prepare("
             SELECT t.*, s.NAME, acc.USERNAME 
@@ -276,11 +287,9 @@ class Query extends db_connect
         }
 
         if ($query) {
-            if ($status == 'ALL') {
-
+            if ($status == 'ALL' || $status == 'OVERDUE') {
                 $query->bind_param('sss', $searchItem, $searchItem, $searchItem);
             } else {
-
                 $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $status);
             }
 
@@ -294,6 +303,7 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
 
 
     // Transaction details

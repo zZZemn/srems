@@ -11,6 +11,7 @@ $getTransaction = $query->getAll('transaction');
 <div class="d-flex justify-content-end mt-2">
     <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
         <option value="ALL">All</option>
+        <option value="OVERDUE">Overdue</option>
         <option value="BARROWED">Barrowed</option>
         <option value="RETURNED">Returned</option>
     </select>

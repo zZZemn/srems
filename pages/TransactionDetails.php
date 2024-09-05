@@ -32,12 +32,14 @@ if (isset($_GET['tId'])) {
 ?>
 <div class="d-flex justify-content-between align-items-center">
     <h4 class="text-primary">Transaction Details</h4>
-    <a href="Transaction.php" class="btn btn-sm btn-dark">Back to List</a>
-    <?php
+    <div>
+        <a href="Transaction.php" class="btn btn-sm btn-dark">Back to List</a>
+        <?php
     if ($status != "RETURNED") {
         echo '<button class="btn btn-sm btn-primary" id="btnReturnTransaction">Mark as Return</button>';
     }
     ?>
+    </div>
 </div>
 
 <div class="container p-3" id="">

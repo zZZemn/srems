@@ -1,3 +1,5 @@
+var currentDate = new Date();
+
 const loadTransaction = (search, status) => {
   $.ajax({
     type: "GET",
@@ -16,6 +18,8 @@ const loadTransaction = (search, status) => {
 
       if (response.length > 0) {
         $.each(response, function (index, trans) {
+          var dueDate = new Date(trans.DUEDATE);
+
           const $row = $("<tr>");
 
           $row.append($("<td>").text(trans.ID));
@@ -32,7 +36,13 @@ const loadTransaction = (search, status) => {
           $row.append($("<td>").text(trans.NAME));
           $row.append($("<td>").text(trans.DATE));
           $row.append($("<td>").text(trans.DUEDATE));
-          $row.append($("<td>").text(trans.STATUS));
+
+          var statusCell = $("<td>").html(
+            dueDate < currentDate && trans.STATUS != "RETURNED"
+              ? trans.STATUS + " <span class='text-danger'>(Overdue)</span>"
+              : trans.STATUS
+          );
+          $row.append($("<td>").html(statusCell));
 
           $tableBody.append($row);
         });
