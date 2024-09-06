@@ -154,6 +154,36 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+    
+
+    public function getStudentsWSearch($status, $search)
+    {
+        $searchItem = '%' . $search . '%';
+
+        if ($status == 'ALL') {
+            $query = $this->conn->prepare("SELECT * FROM `students` WHERE `STUDENT_CODE` LIKE ? OR `NAME` LIKE ? OR `EMAIL` LIKE ? OR `CONTACT_NO` LIKE ? ORDER BY `NAME` ASC");
+        } else {
+            $query = $this->conn->prepare("SELECT * FROM `students` WHERE `STATUS` = ? AND (`STUDENT_CODE` LIKE ? OR `NAME` LIKE ? OR `EMAIL` LIKE ? OR `CONTACT_NO` LIKE ?) ORDER BY `NAME` ASC");
+        }
+
+        if ($query) {
+            if ($status == 'ALL') {
+                $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $searchItem);
+            } else {
+                $query->bind_param('sssss', $status, $searchItem, $searchItem, $searchItem, $searchItem);
+            }
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
 
     // Inventory

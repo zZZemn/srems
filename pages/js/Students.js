@@ -1,63 +1,75 @@
-const loadStudent = () => {
-  loadList("students", function (response) {
-    const $tableBody = $("#studentTableBody");
+const loadStudent = (search, status) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/student.php",
+    data: {
+      REQUEST_TYPE: "GETSTUDENTS",
+      search: search,
+      status: status,
+    },
+    success: function (response) {
+      const $tableBody = $("#studentTableBody");
 
-    $tableBody.empty();
+      $tableBody.empty();
 
-    if (response.length > 0) {
-      $.each(response, function (index, student) {
-        const $row = $("<tr>");
+      if (response.length > 0) {
+        $.each(response, function (index, student) {
+          const $row = $("<tr>");
 
-        $row.append($("<td>").text(student.ID));
-        $row.append($("<td>").text(student.STUDENT_CODE));
-        $row.append($("<td>").text(student.NAME));
-        $row.append($("<td>").text(student.EMAIL));
-        $row.append($("<td>").text(student.CONTACT_NO));
-        $row.append($("<td>").text(student.STATUS));
+          $row.append($("<td>").text(student.ID));
+          $row.append($("<td>").text(student.STUDENT_CODE));
+          $row.append($("<td>").text(student.NAME));
+          $row.append($("<td>").text(student.EMAIL));
+          $row.append($("<td>").text(student.CONTACT_NO));
+          $row.append($("<td>").text(student.STATUS));
 
-        //
-        const $actionTd = $("<td>").addClass("d-flex");
+          //
+          const $actionTd = $("<td>").addClass("d-flex");
 
-        const $editButton = $("<button>")
-          .append('<i class="bi bi-pencil-square"></i>')
-          .addClass("btn btn-primary btn-sm me-1")
-          .css("font-size", "12px")
-          .attr("id", "btnEditStudent")
-          .attr("data-id", student.ID)
-          .attr("data-studentcode", student.STUDENT_CODE)
-          .attr("data-studentname", student.NAME)
-          .attr("data-studentemail", student.EMAIL)
-          .attr("data-studentcontactno", student.CONTACT_NO);
+          const $editButton = $("<button>")
+            .append('<i class="bi bi-pencil-square"></i>')
+            .addClass("btn btn-primary btn-sm me-1")
+            .css("font-size", "12px")
+            .attr("id", "btnEditStudent")
+            .attr("data-id", student.ID)
+            .attr("data-studentcode", student.STUDENT_CODE)
+            .attr("data-studentname", student.NAME)
+            .attr("data-studentemail", student.EMAIL)
+            .attr("data-studentcontactno", student.CONTACT_NO);
 
-        const $deactivateButton = $("<button>")
-          .addClass(
-            student.STATUS === "ACTIVE"
-              ? "btn btn-danger btn-sm"
-              : "btn btn-success btn-sm"
-          )
-          .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
-          .css("font-size", "12px")
-          .attr("id", "btnDeactivate")
-          .attr("data-id", student.ID)
-          .attr("data-status", student.STATUS);
+          const $deactivateButton = $("<button>")
+            .addClass(
+              student.STATUS === "ACTIVE"
+                ? "btn btn-danger btn-sm"
+                : "btn btn-success btn-sm"
+            )
+            .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+            .css("font-size", "12px")
+            .attr("id", "btnDeactivate")
+            .attr("data-id", student.ID)
+            .attr("data-status", student.STATUS);
 
-        $actionTd.append($editButton).append(" ").append($deactivateButton);
+          $actionTd.append($editButton).append(" ").append($deactivateButton);
 
-        $row.append($actionTd);
+          $row.append($actionTd);
 
-        //
+          //
 
-        $tableBody.append($row);
-      });
-    } else {
-      const $noDataRow = $("<tr>").append(
-        $("<td>")
-          .attr("colspan", 6)
-          .addClass("text-center")
-          .text("No Data Found!")
-      );
-      $tableBody.append($noDataRow);
-    }
+          $tableBody.append($row);
+        });
+      } else {
+        const $noDataRow = $("<tr>").append(
+          $("<td>")
+            .attr("colspan", 7)
+            .addClass("text-center")
+            .text("No Data Found!")
+        );
+        $tableBody.append($noDataRow);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
   });
 };
 
@@ -131,7 +143,11 @@ $("#formEditStudent").submit(function (e) {
         AlertMessage("alert-success", "Student details edited!");
         $("#formEditStudent")[0].reset();
         hideModal();
-        loadStudent();
+
+        const search = $("#inputSearch").val();
+        const status = $("#selectStatus").val();
+
+        loadStudent(search, status);
       } else {
         AlertMessage("alert-danger", "Failed to edit!");
       }
@@ -161,7 +177,11 @@ $(document).on("click", "#btnDeactivate", function (e) {
 
       if (response == 200) {
         AlertMessage("alert-success", "Student status change");
-        loadStudent();
+
+        const search = $("#inputSearch").val();
+        const status = $("#selectStatus").val();
+
+        loadStudent(search, status);
       } else {
         AlertMessage("alert-danger", "Failed to change status!");
       }
@@ -173,4 +193,19 @@ $(document).on("click", "#btnDeactivate", function (e) {
 });
 // End
 
-loadStudent();
+$("#selectStatus").change(function (e) {
+  e.preventDefault();
+  const search = $("#inputSearch").val();
+  const status = $("#selectStatus").val();
+
+  loadStudent(search, status);
+});
+
+$("#inputSearch").on("input", function (e) {
+  const search = $("#inputSearch").val();
+  const status = $("#selectStatus").val();
+
+  loadStudent(search, status);
+});
+
+loadStudent("", "ALL");

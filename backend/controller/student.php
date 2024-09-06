@@ -41,5 +41,18 @@ if (isset($_POST['REQUEST_TYPE'])) {
         } else {
             echo 400;
         }
+    } elseif ($reqType == 'GETSTUDENTS') {
+        $search = $_GET['search'];
+        $status = $_GET['status'];
+
+        $result = $query->getStudentsWSearch($status, $search);
+
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
 }

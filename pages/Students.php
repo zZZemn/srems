@@ -9,6 +9,15 @@ $getStudents = $query->getAll('students');
     <button class="btn btn-sm btn-primary" id="btnAddStudent"><i class="bi bi-plus-lg"></i> Add</button>
 </div>
 
+<div class="d-flex justify-content-end mt-2">
+    <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
+        <option value="ALL">All</option>
+        <option value="ACTIVE">Active</option>
+        <option value="INACTIVE">Inactive</option>
+    </select>
+    <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
+</div>
+
 <table class="table table-sm table-striped" style="font-size: 12px;">
     <thead>
         <tr>
