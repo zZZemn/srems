@@ -1,61 +1,73 @@
-const loadInventory = () => {
-  glLoadInventory(function (response) {
-    const $tableBody = $("#inventoryTableBody");
+const loadInventory = (search, category) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "GETINVENTORY",
+      search: search,
+      category: category,
+    },
+    success: function (response) {
+      const $tableBody = $("#inventoryTableBody");
 
-    $tableBody.empty();
+      $tableBody.empty();
 
-    if (response.length > 0) {
-      $.each(response, function (index, inv) {
-        const $row = $("<tr>");
+      if (response.length > 0) {
+        $.each(response, function (index, inv) {
+          const $row = $("<tr>");
 
-        $row.append($("<td>").text(inv.ID));
-        $row.append($("<td>").text(inv.INV_CODE));
-        $row.append($("<td>").text(inv.ITEM_NAME));
-        $row.append($("<td>").text(inv.QTY));
-        $row.append($("<td>").text(inv.REMAINING_QTY));
-        $row.append($("<td>").text(inv.CATEGORY));
-        $row.append($("<td>").text(inv.STATUS));
+          $row.append($("<td>").text(inv.ID));
+          $row.append($("<td>").text(inv.INV_CODE));
+          $row.append($("<td>").text(inv.ITEM_NAME));
+          $row.append($("<td>").text(inv.QTY));
+          $row.append($("<td>").text(inv.REMAINING_QTY));
+          $row.append($("<td>").text(inv.CATEGORY));
+          $row.append($("<td>").text(inv.STATUS));
 
-        const $actionTd = $("<td>").addClass("d-flex");
+          const $actionTd = $("<td>").addClass("d-flex");
 
-        const $editButton = $("<button>")
-          .append('<i class="bi bi-pencil-square"></i>')
-          .addClass("btn btn-primary btn-sm me-1")
-          .css("font-size", "12px")
-          .attr("id", "btnEditInventory")
-          .attr("data-id", inv.ID)
-          .attr("data-invcode", inv.INV_CODE)
-          .attr("data-itemname", inv.ITEM_NAME)
-          .attr("data-qty", inv.QTY)
-          .attr("data-category", inv.CATEGORY);
+          const $editButton = $("<button>")
+            .append('<i class="bi bi-pencil-square"></i>')
+            .addClass("btn btn-primary btn-sm me-1")
+            .css("font-size", "12px")
+            .attr("id", "btnEditInventory")
+            .attr("data-id", inv.ID)
+            .attr("data-invcode", inv.INV_CODE)
+            .attr("data-itemname", inv.ITEM_NAME)
+            .attr("data-qty", inv.QTY)
+            .attr("data-category", inv.CATEGORY);
 
-        const $deactivateButton = $("<button>")
-          .addClass(
-            inv.STATUS === "ACTIVE"
-              ? "btn btn-danger btn-sm"
-              : "btn btn-success btn-sm"
-          )
-          .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
-          .css("font-size", "12px")
-          .attr("id", "btnDeactivate")
-          .attr("data-id", inv.ID)
-          .attr("data-status", inv.STATUS);
+          const $deactivateButton = $("<button>")
+            .addClass(
+              inv.STATUS === "ACTIVE"
+                ? "btn btn-danger btn-sm"
+                : "btn btn-success btn-sm"
+            )
+            .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+            .css("font-size", "12px")
+            .attr("id", "btnDeactivate")
+            .attr("data-id", inv.ID)
+            .attr("data-status", inv.STATUS);
 
-        $actionTd.append($editButton).append(" ").append($deactivateButton);
+          $actionTd.append($editButton).append(" ").append($deactivateButton);
 
-        $row.append($actionTd);
+          $row.append($actionTd);
 
-        $tableBody.append($row);
-      });
-    } else {
-      const $noDataRow = $("<tr>").append(
-        $("<td>")
-          .attr("colspan", 6)
-          .addClass("text-center")
-          .text("No Data Found!")
-      );
-      $tableBody.append($noDataRow);
-    }
+          $tableBody.append($row);
+        });
+      } else {
+        const $noDataRow = $("<tr>").append(
+          $("<td>")
+            .attr("colspan", 8)
+            .addClass("text-center")
+            .text("No Data Found!")
+        );
+        $tableBody.append($noDataRow);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log("Form submission failed:", status, error);
+    },
   });
 };
 
@@ -79,7 +91,11 @@ $("#formAddInventory").submit(function (e) {
       if (response == 200) {
         AlertMessage("alert-success", "Item Added!");
         $("#formAddInventory")[0].reset();
-        loadInventory();
+
+        const search = $("#inputSearch").val();
+        const category = $("#selectCategory").val();
+
+        loadInventory(search, category);
       } else {
         AlertMessage("alert-danger", "Failed to add!");
       }
@@ -124,7 +140,11 @@ $("#formEditInventory").submit(function (e) {
         AlertMessage("alert-success", "Item details edited!");
         $("#formEditInventory")[0].reset();
         hideModal();
-        loadInventory();
+
+        const search = $("#inputSearch").val();
+        const category = $("#selectCategory").val();
+
+        loadInventory(search, category);
       } else {
         AlertMessage("alert-danger", "Failed to edit!");
       }
@@ -156,7 +176,11 @@ $(document).on("click", "#btnDeactivate", function (e) {
 
       if (response == 200) {
         AlertMessage("alert-success", "Item status change");
-        loadInventory();
+
+        const search = $("#inputSearch").val();
+        const category = $("#selectCategory").val();
+
+        loadInventory(search, category);
       } else {
         AlertMessage("alert-danger", "Failed to change status!");
       }
@@ -168,4 +192,19 @@ $(document).on("click", "#btnDeactivate", function (e) {
 });
 // End
 
-loadInventory();
+$("#selectCategory").change(function (e) {
+  e.preventDefault();
+  const search = $("#inputSearch").val();
+  const category = $("#selectCategory").val();
+
+  loadInventory(search, category);
+});
+
+$("#inputSearch").on("input", function (e) {
+  const search = $("#inputSearch").val();
+  const category = $("#selectCategory").val();
+
+  loadInventory(search, category);
+});
+
+loadInventory("", "ALL");

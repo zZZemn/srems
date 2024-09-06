@@ -71,6 +71,46 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         header('Content-Type: application/json');
         echo json_encode($inventoryList);
+    } elseif ($reqType == 'GETINVENTORY') {
+
+        $search = $_GET['search'];
+        $category = $_GET['category'];
+
+        $result = $query->getInventoryWSearch($category, $search);
+
+        $data = [];
+        while ($inv = $result->fetch_assoc()) {
+            $barrowedQty = 0;
+            $invId = $inv['ID'];
+            $invQty = $inv['QTY'];
+
+            $getTransactionDetailsUsingInvId = $query->getTransactionDetailsUsingInvId($invId);
+            if ($getTransactionDetailsUsingInvId->num_rows > 0) {
+                while ($transactionDetails = $getTransactionDetailsUsingInvId->fetch_assoc()) {
+                    $getTransactionDetails = $query->getTransactionUsingTransactionCode($transactionDetails['TRANS_CODE']);
+                    if ($getTransactionDetails->num_rows > 0) {
+                        $tDetails = $getTransactionDetails->fetch_assoc();
+
+                        if ($tDetails['STATUS'] != 'RETURNED') {
+                            $barrowedQty += $transactionDetails['QTY'];
+                        }
+                    }
+                }
+            }
+
+            $data[] = [
+                'ID' => $invId,
+                'INV_CODE' => $inv['INV_CODE'],
+                'ITEM_NAME' => $inv['ITEM_NAME'],
+                'QTY' => $invQty,
+                'REMAINING_QTY' => $invQty - $barrowedQty,
+                'CATEGORY' => $inv['CATEGORY'],
+                'STATUS' => $inv['STATUS']
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
     } else {
         echo 400;
     }

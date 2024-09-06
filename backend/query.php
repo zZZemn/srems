@@ -154,7 +154,7 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
-    
+
 
     public function getStudentsWSearch($status, $search)
     {
@@ -231,6 +231,35 @@ class Query extends db_connect
 
             if ($query->execute()) {
                 return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+    public function getInventoryWSearch($category, $search)
+    {
+        $searchItem = '%' . $search . '%';
+
+        if ($category == 'ALL') {
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ? ORDER BY `ITEM_NAME` ASC");
+        } else {
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `CATEGORY` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
+        }
+
+        if ($query) {
+            if ($category == 'ALL') {
+                $query->bind_param('ss', $searchItem, $searchItem);
+            } else {
+                $query->bind_param('sss', $category, $searchItem, $searchItem);
+            }
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
             } else {
                 die("Execution failed: " . $query->error);
             }
@@ -337,6 +366,7 @@ class Query extends db_connect
 
 
     // Transaction details
+
     public function getTransactionDetailsUsingTransactionCode($tCode)
     {
         $query = $this->conn->prepare("SELECT * FROM `transaction_details` WHERE `TRANS_CODE` = ?");
