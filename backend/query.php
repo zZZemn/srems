@@ -184,6 +184,17 @@ class Query extends db_connect
         }
     }
 
+    public function countStudent()
+    {
+        $query = $this->conn->prepare("SELECT COUNT(*) as student_count FROM `students` WHERE STATUS = 'ACTIVE'");
+
+        $query->execute();
+
+        $result = $query->get_result();
+        $studentRes = $result->fetch_assoc();
+        return $studentRes['student_count'];
+    }
+
 
 
     // Inventory
@@ -281,6 +292,17 @@ class Query extends db_connect
         } else {
             die("Preparation failed: " . $this->conn->error);
         }
+    }
+
+    public function countInventory()
+    {
+        $query = $this->conn->prepare("SELECT COUNT(*) as inv_count FROM `inventory` WHERE STATUS = 'ACTIVE'");
+
+        $query->execute();
+
+        $result = $query->get_result();
+        $invRes = $result->fetch_assoc();
+        return $invRes['inv_count'];
     }
 
 
