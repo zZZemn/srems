@@ -112,6 +112,10 @@ $getInventory = $query->getAll('inventory');
                             <option value="Cooking Utensils">Cooking Utensils</option>
                         </select>
                     </div>
+                    <div class="mt-3">
+                        <label for="inventoryImage">Item Image:</label>
+                        <input type="file" class="form-control mt-1" name="inventoryImage" id="inventoryImage" accept="image/*">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>

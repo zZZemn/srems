@@ -214,10 +214,18 @@ class Query extends db_connect
 
     public function editInventory($post)
     {
-        $query = $this->conn->prepare("UPDATE `inventory` SET `INV_CODE`= ?, `ITEM_NAME`= ?, `QTY`= ?, `CATEGORY`= ? WHERE `ID` = ?");
+        if (isset($post['image_path'])) {
+            $query = $this->conn->prepare("UPDATE `inventory` SET `INV_CODE`= ?, `ITEM_NAME`= ?, `QTY`= ?, `CATEGORY`= ?, `IMG` = ? WHERE `ID` = ?");
+        } else {
+            $query = $this->conn->prepare("UPDATE `inventory` SET `INV_CODE`= ?, `ITEM_NAME`= ?, `QTY`= ?, `CATEGORY`= ? WHERE `ID` = ?");
+        }
 
         if ($query) {
-            $query->bind_param("ssisi", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['ID']);
+            if (isset($post['image_path'])) {
+                $query->bind_param("ssissi", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['image_path'], $post['ID']);
+            } else {
+                $query->bind_param("ssisi", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['ID']);
+            }
 
             if ($query->execute()) {
                 return 200;

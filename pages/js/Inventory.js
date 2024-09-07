@@ -63,7 +63,7 @@ const loadInventory = (search, category) => {
       } else {
         const $noDataRow = $("<tr>").append(
           $("<td>")
-            .attr("colspan", 8)
+            .attr("colspan", 9)
             .addClass("text-center")
             .text("No Data Found!")
         );
@@ -137,12 +137,15 @@ $(document).on("click", "#btnEditInventory", function (e) {
 $("#formEditInventory").submit(function (e) {
   e.preventDefault();
 
-  var formData = $(this).serialize();
+  // var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
     type: "POST",
     url: "../backend/controller/inventory.php",
     data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
       if (response == 200) {
         AlertMessage("alert-success", "Item details edited!");
