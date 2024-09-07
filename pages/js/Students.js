@@ -24,7 +24,7 @@ const loadStudent = (search, status) => {
           $row.append($("<td>").text(student.STATUS));
 
           //
-          const $actionTd = $("<td>").addClass("d-flex");
+          const $actionTd = $("<td>");
 
           const $editButton = $("<button>")
             .append('<i class="bi bi-pencil-square"></i>')

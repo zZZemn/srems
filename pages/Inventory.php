@@ -23,6 +23,7 @@ $getInventory = $query->getAll('inventory');
         <tr>
             <th>ID</th>
             <th>Inventory Code</th>
+            <th></th>
             <th>Item</th>
             <th>Total Qty</th>
             <th>Qty Left</th>

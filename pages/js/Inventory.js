@@ -18,13 +18,18 @@ const loadInventory = (search, category) => {
 
           $row.append($("<td>").text(inv.ID));
           $row.append($("<td>").text(inv.INV_CODE));
+          $row.append(
+            $("<td>").html(
+              "<img src='../items-photos/default.jpg' style='height: 30px; width: 30px;'>"
+            )
+          );
           $row.append($("<td>").text(inv.ITEM_NAME));
           $row.append($("<td>").text(inv.QTY));
           $row.append($("<td>").text(inv.REMAINING_QTY));
           $row.append($("<td>").text(inv.CATEGORY));
           $row.append($("<td>").text(inv.STATUS));
 
-          const $actionTd = $("<td>").addClass("d-flex");
+          const $actionTd = $("<td>");
 
           const $editButton = $("<button>")
             .append('<i class="bi bi-pencil-square"></i>')
