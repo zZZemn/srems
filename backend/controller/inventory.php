@@ -10,8 +10,31 @@ if (isset($_POST['REQUEST_TYPE'])) {
     $reqType = $_POST['REQUEST_TYPE'];
 
     if ($reqType == 'ADDINVENTORY') {
+        if (isset($_FILES['inventoryImage']) && $_FILES['inventoryImage']['error'] === UPLOAD_ERR_OK) {
+            $targetDir = "../../items-photos/";
 
-        echo $query->addInventory($_POST);
+            $fileTmpPath = $_FILES['inventoryImage']['tmp_name'];
+            $fileName = $_FILES['inventoryImage']['name'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+            $allowedfileExtensions = array('jpg', 'jpeg', 'png');
+
+            if (in_array($fileExtension, $allowedfileExtensions)) {
+                $dest_path = $targetDir . $newFileName;
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $_POST['image_path'] = $newFileName;
+                    echo $query->addInventory($_POST);
+                } else {
+                    echo 'There was an error moving the uploaded file.';
+                }
+            } else {
+                echo 'Invalid file extension. Only jpg, jpeg, png, and gif are allowed.';
+            }
+        } else {
+            echo $query->addInventory($_POST);
+        }
     } elseif ($reqType == 'EDITINVENTORY') {
 
         echo $query->editInventory($_POST);

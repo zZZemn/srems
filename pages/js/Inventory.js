@@ -85,12 +85,15 @@ $("#btnAddInventory").click(function (e) {
 $("#formAddInventory").submit(function (e) {
   e.preventDefault();
 
-  var formData = $(this).serialize();
+  // var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
     url: "../backend/controller/inventory.php",
     type: "POST",
     data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
       console.log(response);
       if (response == 200) {

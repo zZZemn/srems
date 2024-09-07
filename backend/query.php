@@ -189,11 +189,18 @@ class Query extends db_connect
     // Inventory
     public function addInventory($post)
     {
-        $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `STATUS`) VALUES (?, ?, ?, ?, 'ACTIVE')");
+        if (isset($post['image_path'])) {
+            $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, 'ACTIVE')");
+        } else {
+            $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`,`STATUS`) VALUES (?, ?, ?, ?, 'default.jpg','ACTIVE')");
+        }
 
         if ($query) {
-
-            $query->bind_param("ssis", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory']);
+            if (isset($post['image_path'])) {
+                $query->bind_param("ssiss", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['image_path'], $post['inventoryCategory']);
+            } else {
+                $query->bind_param("ssis", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory']);
+            }
 
             if ($query->execute()) {
                 return 200;
