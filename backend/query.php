@@ -400,6 +400,28 @@ class Query extends db_connect
         }
     }
 
+    public function getBINumbersPerMonth()
+    {
+        $query = $this->conn->prepare("
+        SELECT YEAR(`DATE`) AS year, MONTH(`DATE`) AS month, COUNT(*) AS transaction_count
+        FROM `transaction`
+        WHERE YEAR(`DATE`) = YEAR(CURDATE()) -- Filter to get current year data
+        GROUP BY MONTH(`DATE`)
+        ORDER BY month
+        ");
+
+        if ($query) {
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
 
     // Transaction details

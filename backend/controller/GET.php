@@ -20,5 +20,29 @@ if (isset($_GET['REQUEST_TYPE'])) {
 
         header('Content-Type: application/json');
         echo json_encode($data);
+    } elseif ($reqType == "GETBIDASHBOARDDATA") {
+        $labels = [];
+        $numbers = [];
+
+        $getData = $query->getBINumbersPerMonth();
+
+        foreach ($getData as $row) {
+            $month = $row['month'];
+            $transaction_count = $row['transaction_count'];
+
+            $dateObj   = DateTime::createFromFormat('!m', $month);
+            $monthName = $dateObj->format('F');
+
+            $labels[] = $monthName;
+            $numbers[] = $transaction_count;
+        }
+
+        $data = [
+            "labels" => $labels,
+            "numbers" => $numbers
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
 }
