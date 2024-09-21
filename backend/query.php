@@ -480,4 +480,25 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+    public function getTransactionDetailsUsingStudentId($sId)
+    {
+        $query = $this->conn->prepare("SELECT td.*, t.ID as tId, t.DATE FROM `transaction_details` AS td 
+        JOIN `transaction` AS t ON td.TRANS_CODE = t.TRANSACTION_CODE 
+        JOIN `students` AS s ON t.STUDENT_ID = s.ID 
+        WHERE s.ID = ?");
+
+        if ($query) {
+            $query->bind_param('i', $sId);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 }

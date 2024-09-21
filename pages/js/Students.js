@@ -17,7 +17,15 @@ const loadStudent = (search, status) => {
           const $row = $("<tr>");
 
           $row.append($("<td>").text(student.ID));
-          $row.append($("<td>").text(student.STUDENT_CODE));
+          $row.append(
+            $("<td>").html(
+              "<a href='StudentDetails.php?sId=" +
+                student.ID +
+                "'>" +
+                student.STUDENT_CODE +
+                "</a>"
+            )
+          );
           $row.append($("<td>").text(student.NAME));
           $row.append($("<td>").text(student.EMAIL));
           $row.append($("<td>").text(student.CONTACT_NO));
