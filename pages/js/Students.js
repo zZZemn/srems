@@ -100,7 +100,11 @@ $("#formAddStudent").submit(function (e) {
       if (response == 200) {
         AlertMessage("alert-success", "Student Added!");
         $("#formAddStudent")[0].reset();
-        loadStudent();
+
+        const search = $("#inputSearch").val();
+        const status = $("#selectStatus").val();
+
+        loadStudent(search, status);
       } else {
         AlertMessage("alert-danger", "Failed to add!");
       }
