@@ -6,7 +6,11 @@ $getInventory = $query->getAll('inventory');
 ?>
 <div class="d-flex justify-content-between align-items-center">
     <h4 class="text-primary">Inventory</h4>
-    <button class="btn btn-sm btn-primary" id="btnAddInventory"><i class="bi bi-plus-lg"></i> Add</button>
+    
+    <div>
+        <button class="btn btn-sm btn-dark" id="btnExportInventory"><i class="bi bi-download"></i> Export</button>
+        <button class="btn btn-sm btn-primary" id="btnAddInventory"><i class="bi bi-plus-lg"></i> Add</button>
+    </div>
 </div>
 
 <div class="d-flex justify-content-end mt-2">

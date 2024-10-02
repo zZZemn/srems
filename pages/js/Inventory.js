@@ -218,4 +218,53 @@ $("#inputSearch").on("input", function (e) {
   loadInventory(search, category);
 });
 
+// Export
+
+$("#btnExportInventory").on("click", function () {
+  var today = new Date();
+  var formattedDate =
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    today.getDate().toString().padStart(2, "0");
+  exportTableToCSV("SREMS_INV_" + formattedDate + ".csv");
+});
+
+const exportTableToCSV = (filename) => {
+  var csv = [];
+  var rows = $("table tr");
+
+  rows.each(function () {
+    var row = [];
+    $(this)
+      .find("td, th")
+      .each(function () {
+        row.push($(this).text());
+      });
+    csv.push(row.join(","));
+  });
+
+  downloadCSV(csv.join("\n"), filename);
+};
+
+const downloadCSV = (csv, filename) => {
+  var csvFile;
+  var downloadLink;
+
+  csvFile = new Blob([csv], { type: "text/csv" });
+
+  downloadLink = document.createElement("a");
+
+  downloadLink.download = filename;
+
+  downloadLink.href = window.URL.createObjectURL(csvFile);
+
+  $(downloadLink).hide().appendTo("body");
+  downloadLink.click();
+  $(downloadLink).remove();
+};
+
+// Export End
+
 loadInventory("", "ALL");
