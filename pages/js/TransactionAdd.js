@@ -231,8 +231,6 @@ $(document).on("click", ".btn-remove-item-in-list", function (e) {
 $("#frmTransactionAdd").submit(function (e) {
   e.preventDefault();
 
-  $("#BtnSaveTransaction").attr("disabled", true);
-
   var isInvalidCode = false;
   var isInvalidDate = false;
 
@@ -283,6 +281,8 @@ $("#frmTransactionAdd").submit(function (e) {
   }
 
   if (!isInvalidCode && !isInvalidDate) {
+    $("#BtnSaveTransaction").attr("disabled", true);
+
     $.ajax({
       type: "POST",
       url: "../backend/controller/transaction.php",

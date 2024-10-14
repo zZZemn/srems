@@ -374,6 +374,7 @@ class Query extends db_connect
             OR s.student_code LIKE ? 
             OR s.NAME LIKE ?)
             AND t.DUEDATE < CURDATE()
+            AND t.STATUS != 'RETURNED'
         ");
         } else {
             $query = $this->conn->prepare("
