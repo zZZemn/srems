@@ -157,6 +157,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 'QTY' => $invQty,
                 'REMAINING_QTY' => $invQty - $barrowedQty,
                 'CATEGORY' => $inv['CATEGORY'],
+                'IMG' => $inv['IMG'],
                 'STATUS' => $inv['STATUS']
             ];
         }

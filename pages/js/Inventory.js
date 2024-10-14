@@ -20,7 +20,9 @@ const loadInventory = (search, category) => {
           $row.append($("<td>").text(inv.INV_CODE));
           $row.append(
             $("<td>").html(
-              "<img src='../items-photos/default.jpg' style='height: 30px; width: 30px;'>"
+              "<img src='../items-photos/" +
+                inv.IMG +
+                "' style='height: 30px; width: 30px;'>"
             )
           );
           $row.append($("<td>").text(inv.ITEM_NAME));

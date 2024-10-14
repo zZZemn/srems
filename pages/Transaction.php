@@ -34,7 +34,7 @@ $getTransaction = $query->getAll('transaction');
     </tbody>
 </table>
 
-<button class="btn btn-sm btn-dark" id="btnSendEmail">Send Email For Overdue Transaction</button>
+<button class="btn btn-sm btn-dark" style="position: absolute; bottom: 10px; right: 10px" id="btnSendEmail">Send Email For Overdue Transaction</button>
 
 <?php include("components/footer.php") ?>
 <script src="js/Transaction.js"></script>
