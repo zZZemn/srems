@@ -309,10 +309,14 @@ class Query extends db_connect
     // Transaction
     public function insertTransaction($code, $uId, $sId, $date, $dueDate)
     {
-        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `STATUS`) VALUES (?, ?, ?, '$date', '$dueDate', 'BARROWED')");
+        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'BARROWED')");
 
         if ($query) {
-            $query->bind_param('sii', $code, $uId, $sId);
+            $sentEmailBorrowed = 1;
+            $sentEmailReturned = 0;
+            $sentEmailOverdue = 0;
+
+            $query->bind_param('siissiii', $code, $uId, $sId, $date, $dueDate, $sentEmailBorrowed, $sentEmailReturned, $sentEmailOverdue);
 
             if ($query->execute()) {
                 return 200;
@@ -323,6 +327,8 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+
 
     public function getTransactionUsingTransactionCode($tCode)
     {

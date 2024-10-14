@@ -59,7 +59,7 @@ include("components/header.php");
 
     <div class="mt-5 d-flex justify-content-end">
         <a href="Transaction.php" class="btn btn-sm btn-dark me-1">Back to list</a>
-        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+        <button type="submit" class="btn btn-sm btn-primary" id="BtnSaveTransaction">Save</button>
     </div>
 </form>
 

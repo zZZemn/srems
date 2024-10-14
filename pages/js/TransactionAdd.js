@@ -1,5 +1,27 @@
 const itemsArray = [];
 
+var barrowedInfo = {};
+
+const sendEmail = (email, name, dueDate) => {
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/email.php",
+    data: {
+      REQUEST_TYPE: "SENDEMAILBARROWED",
+      email: email,
+      name: name,
+      items: JSON.stringify(itemsArray),
+      dueDate: dueDate,
+    },
+    success: function (response) {
+      console.log(response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    },
+  });
+};
+
 const searchStudentCode = (studCode) => {
   $.ajax({
     url: "../backend/controller/student.php",
@@ -209,6 +231,8 @@ $(document).on("click", ".btn-remove-item-in-list", function (e) {
 $("#frmTransactionAdd").submit(function (e) {
   e.preventDefault();
 
+  $("#BtnSaveTransaction").attr("disabled", true);
+
   var isInvalidCode = false;
   var isInvalidDate = false;
 
@@ -236,6 +260,8 @@ $("#frmTransactionAdd").submit(function (e) {
       STUDENT_CODE: studCode,
     },
     success: function (response) {
+      barrowedInfo = response;
+      console.log(response);
       console.log("test code: " + response);
       if (response == 400) {
         isInvalidCode = true;
@@ -267,12 +293,18 @@ $("#frmTransactionAdd").submit(function (e) {
         ITEMS: JSON.stringify(itemsArray),
       },
       success: function (response) {
+        console.log(response);
         if (response == 200) {
           AlertMessage("alert-success", "Transaction added!");
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          try {
+            sendEmail(barrowedInfo.EMAIL, barrowedInfo.NAME, dueDate);
+          } catch (e) {
+            console.error("An error occurred while sending the email:", e);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
         } else {
           AlertMessage("alert-danger", "Something went wrong!");
           return;
