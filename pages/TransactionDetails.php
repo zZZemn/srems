@@ -35,10 +35,10 @@ if (isset($_GET['tId'])) {
     <div>
         <a href="Transaction.php" class="btn btn-sm btn-dark">Back to List</a>
         <?php
-    if ($status != "RETURNED") {
-        echo '<button class="btn btn-sm btn-primary" id="btnReturnTransaction">Mark as Return</button>';
-    }
-    ?>
+        if ($status != "RETURNED") {
+            echo '<button class="btn btn-sm btn-primary" id="btnReturnTransaction">Mark as Return</button>';
+        }
+        ?>
     </div>
 </div>
 
@@ -49,7 +49,7 @@ if (isset($_GET['tId'])) {
         </div>
 
         <ul class="list-group">
-            <li class="list-group-item">Date of Transaction: <?= $transcation['DATE'] ?></li>
+            <li class="list-group-item">Date of Transaction: <span id="tdDOT"><?= $transcation['DATE'] ?></span></li>
             <li class="list-group-item">Due Date: <?= $dueDate ?></li>
             <li class="list-group-item">STATUS: <?= $status ?></li>
         </ul>
@@ -121,6 +121,8 @@ if (isset($_GET['tId'])) {
         </div>
     </div>
 </div>
+
+<input type="hidden" id="txtHiddenTCode" value="<?= $tCode ?>">
 
 
 

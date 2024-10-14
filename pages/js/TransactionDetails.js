@@ -1,3 +1,23 @@
+const sendEmail = (email, name, dot, tId) => {
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/email.php",
+    data: {
+      REQUEST_TYPE: "SENDEMAILRETURNED",
+      email: email,
+      name: name,
+      dot: dot,
+      tId: tId,
+    },
+    success: function (response) {
+      console.log(response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    },
+  });
+};
+
 $("#btnReturnTransaction").click(function (e) {
   e.preventDefault();
   $("#ModalReturnTransaction").modal("show");
@@ -5,6 +25,9 @@ $("#btnReturnTransaction").click(function (e) {
 
 $("#formReturnTransaction").submit(function (e) {
   e.preventDefault();
+
+  $("#btnReturnTransaction").attr("disabled", true);
+
   var formData = $(this).serialize();
 
   $.ajax({
@@ -15,9 +38,13 @@ $("#formReturnTransaction").submit(function (e) {
       if (response == 200) {
         AlertMessage("alert-success", "Transcation Completed!");
         $("#formReturnTransaction")[0].reset();
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+
+        sendEmail(
+          $("#sdEmail").text(),
+          $("#sdName").text(),
+          $("#tdDOT").text(),
+          $("#txtHiddenTCode").val()
+        );
       } else {
         AlertMessage("alert-danger", "Failed to complete transction!");
       }

@@ -55,7 +55,31 @@ if (isset($_POST['REQUEST_TYPE'])) {
         Best regards,
         <br>
         Srems HM Department";
+    } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILRETURNED' && isset($_POST['name'], $_POST['dot'], $_POST['tId'])) {
+        $transactionId = htmlspecialchars($_POST['tId'], ENT_QUOTES, 'UTF-8');
+        $dot = htmlspecialchars($_POST['dot'], ENT_QUOTES, 'UTF-8');
+
+        $messageBody = "
+        Dear " . htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') . ",
+        <br>
+        <br>
+        We are pleased to inform you that you have successfully returned the items borrowed from the laboratory.
+        <br>
+        The date of this transaction is: <strong>{$dot}</strong>.
+        <br>
+        Your transaction code is: <strong>{$transactionId}</strong>.
+        <br>
+        <br>
+        If you have any questions or need further assistance, feel free to reach out to us.
+        <br>
+        Thank you for your cooperation.
+        <br>
+        <br>
+        Best regards,
+        <br>
+        Srems HM Department";
     }
+
 
 
 
