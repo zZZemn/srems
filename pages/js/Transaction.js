@@ -1,5 +1,27 @@
 var currentDate = new Date();
 
+const sendEmail = () => {
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/email.php",
+    data: {
+      REQUEST_TYPE: "SENDEMAILOVERDUE",
+    },
+    success: function (response) {
+      console.log("response:" + response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    },
+  });
+};
+
+$("#btnSendEmail").click(function (e) {
+  e.preventDefault();
+  $(this).attr("disabled", true);
+  sendEmail();
+});
+
 const loadTransaction = (search, status) => {
   $.ajax({
     type: "GET",

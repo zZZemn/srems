@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+include('../query.php');
+$query = new Query();
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -9,19 +12,42 @@ require('../PHPMailer/src/SMTP.php');
 require('../PHPMailer/src/Exception.php');
 
 
+function sendEmail($email, $name, $message)
+{
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'sremshmdept@gmail.com';
+    $mail->Password = 'kcaq xzqu rqpj jmdb';
+    $mail->Port = 465;
+    $mail->SMTPSecure = 'ssl';
+
+    $mail->setFrom('ugabane0516@gmail.com', 'SREMS');
+    $mail->addAddress($email);
+    $mail->isHTML(true);
+    $mail->Subject = 'SREMS Notification!';
+    $mail->Body = $message;
+
+    if ($mail->send()) {
+        echo 200;
+    } else {
+        echo 400;
+    }
+}
+
+
 $messageBody = '';
 
 
 if (isset($_POST['REQUEST_TYPE'])) {
 
-    if ($_POST['REQUEST_TYPE'] == 'SENDEMAILBARROWED' && isset($_POST['items'], $_POST['name'], $_POST['dueDate'])) {
-        // Decode the items JSON
+    if ($_POST['REQUEST_TYPE'] == 'SENDEMAILBARROWED' && isset($_POST['items'], $_POST['name'], $_POST['dueDate'], $_POST['email'])) {
+
         $itemsArray = json_decode($_POST['items'], true);
 
-        // Initialize the items list
         $itemsList = "<ul>";
 
-        // Loop through each item and build the items list
         foreach ($itemsArray as $item) {
             $itemName = htmlspecialchars($item['itemName'], ENT_QUOTES, 'UTF-8');
             $itemQty = htmlspecialchars($item['itemQty'], ENT_QUOTES, 'UTF-8');
@@ -30,10 +56,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         $itemsList .= "</ul>";
 
-        // Get the due date from POST data and format it
         $dueDate = htmlspecialchars($_POST['dueDate'], ENT_QUOTES, 'UTF-8');
 
-        // Create the email message body
         $messageBody = "
         Dear " . htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') . ",
         <br>
@@ -55,7 +79,10 @@ if (isset($_POST['REQUEST_TYPE'])) {
         Best regards,
         <br>
         Srems HM Department";
-    } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILRETURNED' && isset($_POST['name'], $_POST['dot'], $_POST['tId'])) {
+
+
+        sendEmail($_POST['email'], $_POST['name'], $messageBody);
+    } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILRETURNED' && isset($_POST['name'], $_POST['dot'], $_POST['tId'], $_POST['email'])) {
         $transactionId = htmlspecialchars($_POST['tId'], ENT_QUOTES, 'UTF-8');
         $dot = htmlspecialchars($_POST['dot'], ENT_QUOTES, 'UTF-8');
 
@@ -78,37 +105,49 @@ if (isset($_POST['REQUEST_TYPE'])) {
         Best regards,
         <br>
         Srems HM Department";
-    }
 
+        sendEmail($_POST['email'], $_POST['name'], $messageBody);
+    } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILOVERDUE') {
+        $getOD = $query->getTransctionsWSearch('OVERDUE', '');
 
+        if ($getOD->num_rows > 0) {
+            while ($od = $getOD->fetch_assoc()) {
+                $getStudent = $query->getById('students', $od['STUDENT_ID']);
 
+                if ($getStudent->num_rows > 0) {
+                    $student = $getStudent->fetch_assoc();
 
+                    $dueDate = $od['DUEDATE'];
+                    $transactionDate = $od['DATE'];
+                    $transactionCode = $od['TRANSACTION_CODE'];
 
+                    $messageBody = "
+                        Dear " . htmlspecialchars($student['NAME'], ENT_QUOTES, 'UTF-8') . ",
+                        <br>
+                        <br>
+                        This is a reminder that you have overdue items borrowed from the laboratory.
+                        <br>
+                        The due date for these items was: <strong>{$dueDate}</strong>.
+                        <br>
+                        The date of your transaction was: <strong>{$transactionDate}</strong>.
+                        <br>
+                        Your transaction code is: <strong>{$transactionCode}</strong>.
+                        <br>
+                        <br>
+                        Please return the items as soon as possible to avoid any penalties.
+                        <br>
+                        If you have any questions or need further assistance, feel free to reach out to us.
+                        <br>
+                        Thank you for your cooperation.
+                        <br>
+                        <br>
+                        Best regards,
+                        <br>
+                        Srems HM Department";
 
-    if (isset($_POST['email'])) {
-        $email = $_POST['email'];
-        $name = $_POST['name'];
-        $message = $_POST['message'];
-
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'sremshmdept@gmail.com';
-        $mail->Password = 'kcaq xzqu rqpj jmdb';
-        $mail->Port = 465;
-        $mail->SMTPSecure = 'ssl';
-
-        $mail->setFrom('ugabane0516@gmail.com', 'SREMS');
-        $mail->addAddress($email);
-        $mail->isHTML(true);
-        $mail->Subject = 'SREMS Notification!';
-        $mail->Body = $messageBody;
-
-        if ($mail->send()) {
-            echo 200;
-        } else {
-            echo 400;
+                    sendEmail($student['EMAIL'], $student['NAME'], $messageBody);
+                }
+            }
         }
     }
 }
