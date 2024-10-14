@@ -109,7 +109,9 @@ if (!$_SESSION['id']) {
     <nav class="d-flex justify-content-between align-items-center px-3 py-2 bg-dark  text-light">
         <div class="d-flex align-items-center">
             <button class="btn p-0 text-light me-2" id="btn-toggle-side-bar" style="font-size: 30px;"><i class="bi bi-list"></i></button>
-            <h5 class="m-0">LOGO</h5>
+            <a href="Dashboard.php">
+                <h5 class="m-0">SREMS</h5>
+            </a>
         </div>
         <div class="text-light">
 
