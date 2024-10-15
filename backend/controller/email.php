@@ -92,6 +92,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
         <br>
         We are pleased to inform you that you have successfully returned the items borrowed from the laboratory.
         <br>
+        <br>
         The date of this transaction is: <strong>{$dot}</strong>.
         <br>
         Your transaction code is: <strong>{$transactionId}</strong>.
@@ -126,6 +127,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
                         <br>
                         <br>
                         This is a reminder that you have overdue items borrowed from the laboratory.
+                        <br>
                         <br>
                         The due date for these items was: <strong>{$dueDate}</strong>.
                         <br>
