@@ -29,7 +29,9 @@ const loadStudent = (search, status) => {
           $row.append($("<td>").text(student.NAME));
           $row.append($("<td>").text(student.EMAIL));
           $row.append($("<td>").text(student.CONTACT_NO));
-          $row.append($("<td>").text(student.STATUS));
+          $row.append(
+            $("<td>").text(student.STATUS === "ACTIVE" ? "Active" : "Deleted")
+          );
 
           //
           const $actionTd = $("<td>");
@@ -51,7 +53,7 @@ const loadStudent = (search, status) => {
                 ? "btn btn-danger btn-sm"
                 : "btn btn-success btn-sm"
             )
-            .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+            .text(student.STATUS === "ACTIVE" ? "Delete" : "Restore")
             .css("font-size", "12px")
             .attr("id", "btnDeactivate")
             .attr("data-id", student.ID)

@@ -11,7 +11,7 @@ const loadInventory = (search, category) => {
       const $tableBody = $("#inventoryTableBody");
 
       $tableBody.empty();
-
+      console.log(response);
       if (response.length > 0) {
         $.each(response, function (index, inv) {
           const $row = $("<tr>");
@@ -29,7 +29,9 @@ const loadInventory = (search, category) => {
           $row.append($("<td>").text(inv.QTY));
           $row.append($("<td>").text(inv.REMAINING_QTY));
           $row.append($("<td>").text(inv.CATEGORY));
-          $row.append($("<td>").text(inv.STATUS));
+          $row.append(
+            $("<td>").text(inv.STATUS === "ACTIVE" ? "Active" : "Deleted")
+          );
 
           const $actionTd = $("<td>");
 
@@ -50,7 +52,7 @@ const loadInventory = (search, category) => {
                 ? "btn btn-danger btn-sm"
                 : "btn btn-success btn-sm"
             )
-            .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+            .text(inv.STATUS === "ACTIVE" ? "Delete" : "Restore")
             .css("font-size", "12px")
             .attr("id", "btnDeactivate")
             .attr("data-id", inv.ID)

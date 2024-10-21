@@ -6,7 +6,7 @@ $getInventory = $query->getAll('inventory');
 ?>
 <div class="d-flex justify-content-between align-items-center">
     <h4 class="text-primary">Inventory</h4>
-    
+
     <div>
         <button class="btn btn-sm btn-dark" id="btnExportInventory"><i class="bi bi-download"></i> Export</button>
         <button class="btn btn-sm btn-primary" id="btnAddInventory"><i class="bi bi-plus-lg"></i> Add</button>
@@ -18,6 +18,7 @@ $getInventory = $query->getAll('inventory');
         <option value="ALL">All</option>
         <option value="Glass">Glass</option>
         <option value="Plates">Plates</option>
+        <option value="Deleted">Deleted</option>
     </select>
     <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
 </div>

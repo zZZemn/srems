@@ -4,6 +4,7 @@ date_default_timezone_set('Asia/Manila');
 
 class Query extends db_connect
 {
+
     public function __construct()
     {
         $this->connect();
@@ -268,10 +269,14 @@ class Query extends db_connect
 
     public function getInventoryWSearch($category, $search)
     {
+        $CONST_INACTIVE = "INACTIVE";
+
         $searchItem = '%' . $search . '%';
 
         if ($category == 'ALL') {
-            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ? ORDER BY `ITEM_NAME` ASC");
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = 'ACTIVE' AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
+        } elseif ($category == 'Deleted') {
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
         } else {
             $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `CATEGORY` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
         }
@@ -279,6 +284,8 @@ class Query extends db_connect
         if ($query) {
             if ($category == 'ALL') {
                 $query->bind_param('ss', $searchItem, $searchItem);
+            } elseif ($category == 'Deleted') {
+                $query->bind_param('sss', $CONST_INACTIVE, $searchItem, $searchItem);
             } else {
                 $query->bind_param('sss', $category, $searchItem, $searchItem);
             }
