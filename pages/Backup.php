@@ -5,16 +5,6 @@
 <a href="../backend/controller/backup/BackupController.php" target="_blank" class="btn btn-primary">Export Database</a>
 
 
-<hr>
-
-<h5 class="text-primary">Restore Database</h5>
-
-<form action="../backend/controller/backup/restore.php" method="POST" enctype="multipart/form-data" class="d-flex mt-3">
-    <input type="file" class="form-control" name="db" required>
-    <button type="submit" class="btn btn-primary ms-2">Upload</button>
-</form>
-
-
 <?php include("components/footer.php") ?>
 </body>
 
