@@ -25,7 +25,7 @@ function fileUpload($files)
     if (in_array($fileExtension, $allowedfileExtensions)) {
         $dest_path = $targetDir . $newFileName;
         if (move_uploaded_file($fileTmpPath, $dest_path)) {
-            return json_encode(array('status' => 200, 'file_name' => $newFileName, 'message' => 'There was an error moving the uploaded file.'));
+            return json_encode(array('status' => 200, 'file_name' => $newFileName, 'message' => 'Success.'));
         } else {
             return json_encode(array('status' => 400, 'message' => 'There was an error moving the uploaded file.'));
         }

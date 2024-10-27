@@ -209,7 +209,7 @@ class Query extends db_connect
 
         if ($query) {
             if (isset($post['image_path'])) {
-                $query->bind_param("ssiss", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['image_path'], $post['inventoryCategory']);
+                $query->bind_param("ssiss", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory'], $post['image_path']);
             } else {
                 $query->bind_param("ssis", $post['inventoryCode'], $post['inventoryItem'], $post['inventoryQty'], $post['inventoryCategory']);
             }
