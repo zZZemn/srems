@@ -43,6 +43,22 @@ class Query extends db_connect
         }
     }
 
+    public function getByField($table, $field, $value)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `$table` WHERE `$field` = '$value'");
+
+        if ($query) {
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
     public function changeStatus($table, $id, $value)
     {
         $query = $this->conn->prepare("UPDATE `$table` SET `STATUS`='$value' WHERE `ID` = ?");
@@ -59,8 +75,6 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
-
-
 
     // --
 

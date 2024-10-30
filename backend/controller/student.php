@@ -10,9 +10,70 @@ if (isset($_POST['REQUEST_TYPE'])) {
     $reqType = $_POST['REQUEST_TYPE'];
 
     if ($reqType == 'ADDSTUDENT') {
-        echo $query->addStudent($_POST);
+
+        $checkCode = $query->getByField('students', 'STUDENT_CODE', $_POST['studentCode']);
+        $checkEmail = $query->getByField('students', 'EMAIL', $_POST['studentEmail']);
+        $checkName = $query->getByField('students', 'NAME', $_POST['studentName']);
+        $checkNo = $query->getByField('students', 'CONTACT_NO', $_POST['studentContactNo']);
+
+        if ($checkCode->num_rows > 0) {
+            echo 'CODE_EXIST';
+        } elseif ($checkEmail->num_rows > 0) {
+            echo 'EMAIL_EXIST';
+        } elseif ($checkName->num_rows > 0) {
+            echo 'NAME_EXIST';
+        } elseif ($checkNo->num_rows > 0) {
+            echo 'CONTACTNO_EXIST';
+        } else {
+            echo $query->addStudent($_POST);
+        }
     } elseif ($reqType == 'EDITSTUDENT') {
-        echo $query->editStudent($_POST);
+
+        $getStudentInfo = $query->getById('students', $_POST['ID']);
+        if ($getStudentInfo->num_rows > 0) {
+            $student = $getStudentInfo->fetch_assoc();
+
+            if ($student['STUDENT_CODE'] != $_POST['studentCode']) {
+                $checkCode = $query->getByField('students', 'STUDENT_CODE', $_POST['studentCode']);
+
+                if ($checkCode->num_rows > 0) {
+                    echo 'CODE_EXIST';
+                    exit;
+                }
+            }
+
+            if ($student['EMAIL'] != $_POST['studentEmail']) {
+                $checkEmail = $query->getByField('students', 'EMAIL', $_POST['studentEmail']);
+
+                if ($checkEmail->num_rows > 0) {
+                    echo 'EMAIL_EXIST';
+                    exit;
+                }
+            }
+
+            if ($student['NAME'] != $_POST['studentName']) {
+                $checkName = $query->getByField('students', 'NAME', $_POST['studentName']);
+
+                if ($checkName->num_rows > 0) {
+                    echo 'NAME_EXIST';
+                    exit;
+                }
+            }
+
+            if ($student['CONTACT_NO'] != $_POST['studentContactNo']) {
+                $checkNo = $query->getByField('students', 'CONTACT_NO', $_POST['studentContactNo']);
+
+                if ($checkNo->num_rows > 0) {
+                    echo 'CONTACTNO_EXIST';
+                    exit;
+                }
+            }
+
+            echo $query->editStudent($_POST);
+        } else {
+            echo '400';
+            exit;
+        }
     } elseif ($reqType == 'DEACTIVATE') {
         $id = $_POST['ID'];
         $status = $_POST['STATUS'];

@@ -108,7 +108,17 @@ $("#formAddStudent").submit(function (e) {
 
         loadStudent(search, status);
       } else {
-        AlertMessage("alert-danger", "Failed to add!");
+        if (response == "CODE_EXIST") {
+          AlertMessage("alert-danger", "This code already exists!");
+        } else if (response == "EMAIL_EXIST") {
+          AlertMessage("alert-danger", "This email is already in use!");
+        } else if (response == "NAME_EXIST") {
+          AlertMessage("alert-danger", "This name already exists!");
+        } else if (response == "CONTACTNO_EXIST") {
+          AlertMessage("alert-danger", "This contact number already exists!");
+        } else {
+          AlertMessage("alert-danger", "Failed to add!");
+        }
       }
     },
     error: function (xhr, status, error) {
@@ -163,7 +173,17 @@ $("#formEditStudent").submit(function (e) {
 
         loadStudent(search, status);
       } else {
-        AlertMessage("alert-danger", "Failed to edit!");
+        if (response == "CODE_EXIST") {
+          AlertMessage("alert-danger", "This code already exists!");
+        } else if (response == "EMAIL_EXIST") {
+          AlertMessage("alert-danger", "This email is already in use!");
+        } else if (response == "NAME_EXIST") {
+          AlertMessage("alert-danger", "This name already exists!");
+        } else if (response == "CONTACTNO_EXIST") {
+          AlertMessage("alert-danger", "This contact number already exists!");
+        } else {
+          AlertMessage("alert-danger", "Failed to edit!");
+        }
       }
     },
     error: function (xhr, status, error) {
