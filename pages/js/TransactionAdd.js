@@ -70,6 +70,30 @@ const loadAddItemModalContents = () => {
   });
 };
 
+const loadItemSelectList = (category) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "GETINVENTORY",
+      search: "",
+      category: category,
+    },
+    success: function (response) {
+      if (response.length > 0) {
+        $("#AddItemItemNameSelect").empty();
+
+        $("#AddItemItemNameSelect").append('<option value=""></option>');
+
+        response.forEach(function (item) {
+          let option = `<option value="${item.ID}" data-qty="${item.QTY}">${item.ITEM_NAME}</option>`;
+          $("#AddItemItemNameSelect").append(option);
+        });
+      }
+    },
+  });
+};
+
 $("#btnClearStudCode").click(function (e) {
   e.preventDefault();
 
@@ -114,27 +138,29 @@ $("#btnAddItem").click(function (e) {
   $("#ModalTransactionAddItem").modal("show");
 });
 
-$("#AddItemInputItem").on("input", function () {
-  const inputVal = $(this).val();
-  const $selectedOption = $("#itemList option").filter(function () {
-    return $(this).val() === inputVal;
-  });
+$("#AddItemSelectCategory").change(function (e) {
+  e.preventDefault();
+  loadItemSelectList($(this).val());
+});
 
-  if ($selectedOption.length) {
-    const invID = $selectedOption.data("id");
-    const qty = $selectedOption.data("qty");
-    const itemName = $selectedOption.val();
+$("#AddItemItemNameSelect").change(function (e) {
+  e.preventDefault();
 
-    $("#hiddenItemId").val(invID);
-    $("#hiddenItemQty").val(qty);
-    $("#hiddenItemName").val(itemName);
-  }
+  let selectedOption = $(this).find(":selected");
+
+  const invID = selectedOption.val();
+  const qty = selectedOption.data("qty");
+  const itemName = selectedOption.text();
+
+  $("#hiddenItemId").val(invID);
+  $("#hiddenItemQty").val(qty);
+  $("#hiddenItemName").val(itemName);
 });
 
 $("#formTransactionAddItem").submit(function (e) {
   e.preventDefault();
 
-  const itemName = $("#AddItemInputItem").val();
+  const itemName = $("#hiddenItemName").val();
 
   const hiddenItemName = $("#hiddenItemName").val();
   const itemId = $("#hiddenItemId").val();
@@ -171,8 +197,12 @@ $("#formTransactionAddItem").submit(function (e) {
 
     hideModal();
 
+    $("#AddItemSelectCategory").val("ALL");
+    loadItemSelectList("ALL");
+    $("#AddItemItemNameSelect").val("");
+
+    $("#hiddenItemName").val("");
     $("#hiddenItemId").val("");
-    $("#AddItemInputItem").val("");
     $("#hiddenItemQty").val("");
   } else {
     AlertMessage("alert-danger", "Please select item in the list");
@@ -335,3 +365,4 @@ $("#frmTransactionAdd").submit(function (e) {
 
 loadAddItemModalContents();
 loadItemsList();
+loadItemSelectList("ALL");

@@ -91,12 +91,28 @@ include("components/header.php");
             <form id="formTransactionAddItem">
                 <input type="hidden" name="REQUEST_TYPE" value="ADDSTUDENT">
                 <div class="modal-body">
+                    <div>
+                        <label for="AddItemSelectCategory">Category</label>
+                        <select name="category" id="AddItemSelectCategory" class="form-control">
+                            <option value="ALL">All</option>
+                            <option value="Glass">Glass</option>
+                            <option value="Plates">Plates</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-2">
+                        <label for="AddItemItemName">Item</label>
+                        <select name="category" id="AddItemItemNameSelect" class="form-control">
+                            <option value=""></option>
+                        </select>
+                    </div>
+
                     <div class="">
-                        <label for="AddItemInputItem">Item:</label>
+                        <!-- <label for="AddItemInputItem">Item:</label>
                         <input type="text" class="form-control mt-1" name="AddItemInputItem" id="AddItemInputItem" list="itemList" required>
                         <datalist id="itemList">
 
-                        </datalist>
+                        </datalist> -->
 
                         <input type="hidden" id="hiddenItemName" required>
                         <input type="hidden" id="hiddenItemId" required>
