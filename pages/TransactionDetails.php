@@ -14,6 +14,8 @@ if (isset($_GET['tId'])) {
         $studId = $transcation['STUDENT_ID'];
         $dueDate = $transcation['DUEDATE'];
         $status = $transcation['STATUS'];
+        $venue = $transcation['VENUE'];
+        $teacher = $transcation['TEACHER'];
 
 
         $getStudent = $query->getById('students', $studId);
@@ -52,6 +54,8 @@ if (isset($_GET['tId'])) {
             <li class="list-group-item">Date of Transaction: <span id="tdDOT"><?= $transcation['DATE'] ?></span></li>
             <li class="list-group-item">Due Date: <?= $dueDate ?></li>
             <li class="list-group-item">STATUS: <?= $status ?></li>
+            <li class="list-group-item">VENUE: <?= $venue ?></li>
+            <li class="list-group-item">TEACHER: <?= $teacher ?></li>
         </ul>
 
     </div>

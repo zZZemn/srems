@@ -57,6 +57,24 @@ include("components/header.php");
 
     </div>
 
+    <div class="container card mt-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Teacher:</h6>
+        </div>
+
+        <input type="text" class="form-control" required id="teacher" name="teacher">
+
+    </div>
+
+    <div class="container card mt-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Venue:</h6>
+        </div>
+
+        <input type="text" class="form-control" required id="venue" name="venue">
+
+    </div>
+
     <div class="mt-5 d-flex justify-content-end">
         <a href="Transaction.php" class="btn btn-sm btn-dark me-1">Back to list</a>
         <button type="submit" class="btn btn-sm btn-primary" id="BtnSaveTransaction">Save</button>

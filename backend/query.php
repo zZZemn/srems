@@ -328,16 +328,16 @@ class Query extends db_connect
 
 
     // Transaction
-    public function insertTransaction($code, $uId, $sId, $date, $dueDate)
+    public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue)
     {
-        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'BARROWED')");
+        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `VENUE`, `TEACHER`,`SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'BARROWED')");
 
         if ($query) {
             $sentEmailBorrowed = 1;
             $sentEmailReturned = 0;
             $sentEmailOverdue = 0;
 
-            $query->bind_param('siissiii', $code, $uId, $sId, $date, $dueDate, $sentEmailBorrowed, $sentEmailReturned, $sentEmailOverdue);
+            $query->bind_param('siissssiii', $code, $uId, $sId, $date, $dueDate, $venue, $teacher, $sentEmailBorrowed, $sentEmailReturned, $sentEmailOverdue);
 
             if ($query->execute()) {
                 return 200;

@@ -234,8 +234,12 @@ $("#frmTransactionAdd").submit(function (e) {
   var isInvalidCode = false;
   var isInvalidDate = false;
 
+  var isInvalidSubmit = false;
+
   const studCode = $("#studentCode").val();
   const dueDate = $("#dueDate").val();
+  const teacher = $("#teacher").val();
+  const venue = $("#venue").val();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -280,7 +284,19 @@ $("#frmTransactionAdd").submit(function (e) {
     return;
   }
 
-  if (!isInvalidCode && !isInvalidDate) {
+  if (teacher == "" || teacher == null) {
+    isInvalidSubmit = true;
+    AlertMessage("alert-danger", "Invalid teacher");
+    return;
+  }
+
+  if (venue == "" || venue == null) {
+    isInvalidSubmit = true;
+    AlertMessage("alert-danger", "Invalid venue");
+    return;
+  }
+
+  if (!isInvalidCode && !isInvalidDate && !isInvalidSubmit) {
     $("#BtnSaveTransaction").attr("disabled", true);
 
     $.ajax({
@@ -290,6 +306,8 @@ $("#frmTransactionAdd").submit(function (e) {
         REQUEST_TYPE: "INSERTNEWTRANSACTION",
         STUDENT_CODE: studCode,
         DUE_DATE: dueDate,
+        TEACHER: teacher,
+        VENUE: venue,
         ITEMS: JSON.stringify(itemsArray),
       },
       success: function (response) {
