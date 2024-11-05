@@ -78,6 +78,7 @@ $("#btnClearStudCode").click(function (e) {
 
 $("#studentCode").on("input", function (e) {
   searchStudentCode($(this).val());
+  $(this).val($(this).val());
 });
 
 // Add Item
