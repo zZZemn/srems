@@ -50,7 +50,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         foreach ($itemsArray as $item) {
             $itemName = htmlspecialchars($item['itemName'], ENT_QUOTES, 'UTF-8');
-            $itemQty = htmlspecialchars($item['itemQty'], ENT_QUOTES, 'UTF-8');
+            $itemQty = htmlspecialchars($item['qty'], ENT_QUOTES, 'UTF-8');
             $itemsList .= "<li>{$itemName}: {$itemQty}</li>";
         }
 
