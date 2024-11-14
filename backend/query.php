@@ -288,11 +288,11 @@ class Query extends db_connect
         $searchItem = '%' . $search . '%';
 
         if ($category == 'ALL') {
-            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = 'ACTIVE' AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = 'ACTIVE' AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ID` ASC");
         } elseif ($category == 'Deleted') {
-            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ID` ASC");
         } else {
-            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `CATEGORY` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ITEM_NAME` ASC");
+            $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `CATEGORY` = ? AND (`ITEM_NAME` LIKE ? OR `INV_CODE` LIKE ?) ORDER BY `ID` ASC");
         }
 
         if ($query) {
