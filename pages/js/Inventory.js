@@ -30,7 +30,7 @@ const loadInventory = (search, category) => {
           $row.append($("<td>").text(inv.REMAINING_QTY));
           $row.append($("<td>").text(inv.CATEGORY));
           $row.append(
-            $("<td>").text(inv.STATUS === "ACTIVE" ? "Active" : "Deleted")
+            $("<td>").text(inv.STATUS === "ACTIVE" ? "Active" : "Deactivated")
           );
 
           const $actionTd = $("<td>");
@@ -52,7 +52,7 @@ const loadInventory = (search, category) => {
                 ? "btn btn-danger btn-sm"
                 : "btn btn-success btn-sm"
             )
-            .text(inv.STATUS === "ACTIVE" ? "Delete" : "Restore")
+            .text(inv.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
             .css("font-size", "12px")
             .attr("id", "btnDeactivate")
             .attr("data-id", inv.ID)

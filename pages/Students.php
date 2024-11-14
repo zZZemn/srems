@@ -13,7 +13,7 @@ $getStudents = $query->getAll('students');
     <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
         <option value="ALL">All</option>
         <option value="ACTIVE">Active</option>
-        <option value="INACTIVE">Deleted</option>
+        <option value="INACTIVE">Deactivated</option>
     </select>
     <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
 </div>

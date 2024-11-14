@@ -30,7 +30,9 @@ const loadStudent = (search, status) => {
           $row.append($("<td>").text(student.EMAIL));
           $row.append($("<td>").text(student.CONTACT_NO));
           $row.append(
-            $("<td>").text(student.STATUS === "ACTIVE" ? "Active" : "Deleted")
+            $("<td>").text(
+              student.STATUS === "ACTIVE" ? "Active" : "Deactivated"
+            )
           );
 
           //
@@ -53,7 +55,7 @@ const loadStudent = (search, status) => {
                 ? "btn btn-danger btn-sm"
                 : "btn btn-success btn-sm"
             )
-            .text(student.STATUS === "ACTIVE" ? "Delete" : "Restore")
+            .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
             .css("font-size", "12px")
             .attr("id", "btnDeactivate")
             .attr("data-id", student.ID)
