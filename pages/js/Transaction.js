@@ -56,7 +56,16 @@ const loadTransaction = (search, status) => {
           );
           $row.append($("<td>").text(trans.USERNAME));
           $row.append($("<td>").text(trans.NAME));
-          $row.append($("<td>").text(trans.DATE));
+
+          const date = new Date(trans.DATE);
+          const formattedDate = date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+          $row.append($("<td>").text(`${formattedDate} ${formattedTime}`));
+
           $row.append($("<td>").text(trans.DUEDATE));
 
           var statusCell = $("<td>").html(
