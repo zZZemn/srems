@@ -384,6 +384,7 @@ class Query extends db_connect
             WHERE t.TRANSACTION_CODE LIKE ? 
             OR s.student_code LIKE ? 
             OR s.NAME LIKE ?
+            ORDER BY t.ID DESC
         ");
         } elseif ($status == 'OVERDUE') {
             $query = $this->conn->prepare("
@@ -396,6 +397,7 @@ class Query extends db_connect
             OR s.NAME LIKE ?)
             AND t.DUEDATE < CURDATE()
             AND t.STATUS != 'RETURNED'
+            ORDER BY t.ID DESC
         ");
         } else {
             $query = $this->conn->prepare("
@@ -407,6 +409,7 @@ class Query extends db_connect
             OR s.student_code LIKE ? 
             OR s.NAME LIKE ?)
             AND t.STATUS = ?
+            ORDER BY t.ID DESC
         ");
         }
 
