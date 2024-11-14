@@ -27,6 +27,12 @@ if (isset($_POST['REQUEST_TYPE'])) {
         $student = $query->getStudentByCode($studCode);
         if ($student->num_rows > 0) {
             $studentDetails = $student->fetch_assoc();
+
+            if ($studentDetails['STATUS'] != "ACTIVE") {
+                echo 400;
+                exit;
+            }
+
             $studentId = $studentDetails['ID'];
         } else {
             echo 400;

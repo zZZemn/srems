@@ -32,9 +32,11 @@ const searchStudentCode = (studCode) => {
     },
     success: function (response) {
       if (response != 400) {
-        $("#sdName").text(response.NAME);
-        $("#sdEmail").text(response.EMAIL);
-        $("#sdContactNo").text(response.CONTACT_NO);
+        if (response.STTATUS == "ACTIVE") {
+          $("#sdName").text(response.NAME);
+          $("#sdEmail").text(response.EMAIL);
+          $("#sdContactNo").text(response.CONTACT_NO);
+        }
       } else {
         $("#sdName").text("");
         $("#sdEmail").text("");
