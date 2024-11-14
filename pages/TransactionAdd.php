@@ -53,7 +53,7 @@ include("components/header.php");
             <h6><i class="bi bi-calendar-day"></i> Due Date:</h6>
         </div>
 
-        <input type="date" class="form-control" required id="dueDate" name="dueDate">
+        <input type="date" class="form-control" required id="dueDate" name="dueDate" value="<?= date('Y-m-d', strtotime('+4 days')) ?>" readonly>
 
     </div>
 
