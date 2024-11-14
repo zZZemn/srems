@@ -114,7 +114,7 @@ if (!$_SESSION['id']) {
             </a>
         </div>
         <div class="text-light">
-
+            <span class="p-0 fw-semibold">Hello, <?= ucwords(strtolower($userInfo['USERNAME'])) ?></span>
         </div>
     </nav>
 
