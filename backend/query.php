@@ -101,11 +101,11 @@ class Query extends db_connect
     // Students
     public function addStudent($post)
     {
-        $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `STATUS`) VALUES (?, ?, ?, ?, 'ACTIVE')");
+        $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE')");
 
         if ($query) {
 
-            $query->bind_param("ssss", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo']);
+            $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
 
             if ($query->execute()) {
                 return 200;
@@ -119,10 +119,10 @@ class Query extends db_connect
 
     public function editStudent($post)
     {
-        $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ? WHERE `ID` = ?");
+        $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ? WHERE `ID` = ?");
 
         if ($query) {
-            $query->bind_param("ssssi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['ID']);
+            $query->bind_param("ssssisi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['ID']);
 
             if ($query->execute()) {
                 return 200;

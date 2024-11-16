@@ -47,7 +47,9 @@ const loadStudent = (search, status) => {
             .attr("data-studentcode", student.STUDENT_CODE)
             .attr("data-studentname", student.NAME)
             .attr("data-studentemail", student.EMAIL)
-            .attr("data-studentcontactno", student.CONTACT_NO);
+            .attr("data-studentcontactno", student.CONTACT_NO)
+            .attr("data-studentyear", student.YEAR)
+            .attr("data-studentsection", student.SECTION);
 
           const $deactivateButton = $("<button>")
             .addClass(
@@ -101,6 +103,7 @@ $("#formAddStudent").submit(function (e) {
     type: "POST",
     data: formData,
     success: function (response) {
+      console.log(response);
       if (response == 200) {
         AlertMessage("alert-success", "Student Added!");
         $("#formAddStudent")[0].reset();
@@ -139,12 +142,17 @@ $(document).on("click", "#btnEditStudent", function (e) {
   const NAME = $(this).data("studentname");
   const EMAIL = $(this).data("studentemail");
   const CONTACT_NO = $(this).data("studentcontactno");
+  const YEAR = $(this).data("studentyear");
+  const SECTION = $(this).data("studentsection");
 
   $("#eStudentId").val(ID);
   $("#eStudentCode").val(STUDENT_CODE);
   $("#eStudentName").val(NAME);
   $("#eStudentEmail").val(EMAIL);
   $("#eStudentContactNo").val(CONTACT_NO);
+  $("#eStudentYear").val(YEAR);
+  $("#eStudentSection").val(SECTION);
+
 
   $("#ModalEditStudent").modal("show");
 });

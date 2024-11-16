@@ -60,6 +60,28 @@ $getStudents = $query->getAll('students');
                         <label for="studentContactNo">Contact No:</label>
                         <input type="text" class="form-control mt-1" name="studentContactNo" id="studentContactNo" required>
                     </div>
+                    <div class="mt-3">
+                        <label for="studentYear">Year:</label>
+                        <select class="form-control mt-1" name="studentYear" id="studentYear" required>
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mt-3">
+                        <label for="studentSection">Section:</label>
+                        <select class="form-control mt-1" name="studentSection" id="studentSection" required>
+                            <option value=""></option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -95,6 +117,28 @@ $getStudents = $query->getAll('students');
                     <div class="mt-3">
                         <label for="studentContactNo">Contact No:</label>
                         <input type="text" class="form-control mt-1" name="studentContactNo" id="eStudentContactNo" required>
+                    </div>
+                    <div class="mt-3">
+                        <label for="eStudentYear">Year:</label>
+                        <select class="form-control mt-1" name="studentYear" id="eStudentYear" required>
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mt-3">
+                        <label for="eStudentSection">Section:</label>
+                        <select class="form-control mt-1" name="studentSection" id="eStudentSection" required>
+                            <option value=""></option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
