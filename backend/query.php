@@ -76,6 +76,25 @@ class Query extends db_connect
         }
     }
 
+    public function deleteUsingId($table, $id)
+    {
+        $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+        $query = $this->conn->prepare("DELETE FROM `$table` WHERE ID = ?");
+
+        if ($query) {
+            $query->bind_param("i", $id);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
     // --
 
     public function login($username)
@@ -525,6 +544,26 @@ class Query extends db_connect
             if ($query->execute()) {
                 $result = $query->get_result();
                 return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+
+    // Teachers
+    public function insertTeachers($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `teachers`(`NAME`, `CONTACT_NO`) VALUES (?, ?)");
+
+        if ($query) {
+            $query->bind_param('ss', $post['name'], $post['contactNo']);
+
+            if ($query->execute()) {
+                return 200;
             } else {
                 die("Execution failed: " . $query->error);
             }
