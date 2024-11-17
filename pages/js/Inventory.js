@@ -22,7 +22,7 @@ const loadInventory = (search, category) => {
             $("<td>").html(
               "<img src='../items-photos/" +
                 inv.IMG +
-                "' style='height: 30px; width: 30px;'>"
+                "' class='btn-item-image' style='height: 30px; width: 30px; cursor: zoom-in;'>"
             )
           );
           $row.append($("<td>").text(inv.ITEM_NAME));
@@ -79,6 +79,16 @@ const loadInventory = (search, category) => {
     },
   });
 };
+
+// Show image
+$(document).on("click", ".btn-item-image", function (e) {
+  e.preventDefault();
+  var src = $(this).attr("src");
+
+  $("#ModalItemImageImg").attr("src", src);
+  $("#ModalViewItemImage").modal("show");
+  console.log(src);
+});
 
 // Add Inventory
 $("#btnAddInventory").click(function (e) {

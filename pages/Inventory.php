@@ -118,7 +118,7 @@ $getInventory = $query->getAll('inventory');
                         </select>
                     </div>
                     <div class="mt-3">
-                        <label for="inventoryImage">Item Image:</label>
+                        <label for="inventoryImage">Change Image:</label>
                         <input type="file" class="form-control mt-1" name="inventoryImage" id="inventoryImage" accept="image/*">
                     </div>
                 </div>
@@ -127,6 +127,18 @@ $getInventory = $query->getAll('inventory');
                     <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalViewItemImage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <img id="ModalItemImageImg" src="../items-photos/default.jpg" alt="Item">
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
