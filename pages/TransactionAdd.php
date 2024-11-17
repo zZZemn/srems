@@ -2,6 +2,8 @@
 
 include("components/header.php");
 
+$teachers = $query->getAll('teachers');
+
 ?>
 <div class="d-flex justify-content-between align-items-center">
     <h4 class="text-primary">Add Transaction</h4>
@@ -62,7 +64,16 @@ include("components/header.php");
             <h6>Teacher:</h6>
         </div>
 
-        <input type="text" class="form-control" required id="teacher" name="teacher">
+        <select class="form-control" required id="teacher" name="teacher">
+            <option value=""></option>
+            <?php
+            foreach ($teachers as $teacher) {
+            ?>
+                <option value="<?= $teacher['NAME'] ?>"><?= $teacher['NAME'] ?></option>
+            <?php
+            }
+            ?>
+        </select>
 
     </div>
 
