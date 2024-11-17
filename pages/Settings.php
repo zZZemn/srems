@@ -7,6 +7,17 @@ include("components/header.php");
     <h4 class="text-primary">Settings</h4>
 </div>
 
+<hr>
+
+
+<h6>Account</h6>
+
+<p>Change Password</p>
+
+<hr>
+
+<h6>Selection Data</h6>
+
 <div class="card p-3">
 
     <h6 style="font-style: italic;">Teachers</h6>
