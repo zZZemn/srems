@@ -3,6 +3,7 @@
 include("components/header.php");
 
 $teachers = $query->getAll('teachers');
+$categories = $query->getAll('categories');
 
 ?>
 <div class="d-flex justify-content-between align-items-center">
@@ -106,14 +107,19 @@ $teachers = $query->getAll('teachers');
                         <label for="AddItemSelectCategory">Category</label>
                         <select name="category" id="AddItemSelectCategory" class="form-control">
                             <option value="ALL">All</option>
-                            <option value="Glass">Glass</option>
-                            <option value="Plates">Plates</option>
+                            <?php
+                            foreach ($categories as $category) {
+                            ?>
+                                <option value="<?= $category['NAME'] ?>"><?= $category['NAME'] ?></option>
+                            <?php
+                            }
+                            ?>
                         </select>
                     </div>
 
                     <div class="mt-2">
                         <label for="AddItemItemName">Item</label>
-                        <select name="category" id="AddItemItemNameSelect" class="form-control">
+                        <select name="category" id="AddItemItemNameSelect" class="form-control" required>
                             <option value=""></option>
                         </select>
                     </div>

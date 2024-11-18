@@ -2,6 +2,7 @@
 
 include("components/header.php");
 $getInventory = $query->getAll('inventory');
+$getCategories = $query->getAll('categories');
 
 ?>
 <div class="d-flex justify-content-between align-items-center">
@@ -16,8 +17,13 @@ $getInventory = $query->getAll('inventory');
 <div class="d-flex justify-content-end mt-2">
     <select name="category" id="selectCategory" class="form-control" style="width: 100px;">
         <option value="ALL">All</option>
-        <option value="Glass">Glass</option>
-        <option value="Plates">Plates</option>
+        <?php
+        foreach ($getCategories as $category) {
+        ?>
+            <option value="<?= $category['NAME'] ?>"><?= $category['NAME'] ?></option>
+        <?php
+        }
+        ?>
         <option value="Deleted">Deactivated</option>
     </select>
     <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
@@ -67,9 +73,13 @@ $getInventory = $query->getAll('inventory');
                         <label for="inventoryCategory">Category:</label>
                         <select class="form-control" name="inventoryCategory" id="inventoryCategory" required>
                             <option value=""></option>
-                            <option value="Glass">Glass</option>
-                            <option value="Plates">Plates</option>
-                            <option value="Cooking Utensils">Cooking Utensils</option>
+                            <?php
+                            foreach ($getCategories as $category) {
+                            ?>
+                                <option value="<?= $category['NAME'] ?>"><?= $category['NAME'] ?></option>
+                            <?php
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="mt-3">
@@ -112,9 +122,13 @@ $getInventory = $query->getAll('inventory');
                         <label for="inventoryCategory">Category:</label>
                         <select class="form-control" name="inventoryCategory" id="eInventoryCategory" required>
                             <option value=""></option>
-                            <option value="Glass">Glass</option>
-                            <option value="Plates">Plates</option>
-                            <option value="Cooking Utensils">Cooking Utensils</option>
+                            <?php
+                            foreach ($getCategories as $category) {
+                            ?>
+                                <option value="<?= $category['NAME'] ?>"><?= $category['NAME'] ?></option>
+                            <?php
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="mt-3">

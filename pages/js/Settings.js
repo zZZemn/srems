@@ -95,3 +95,101 @@ $(document).on("click", ".btn-delete-teacher", function (e) {
 });
 
 loadTeacher();
+
+// ---
+const loadCategory = () => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/category.php",
+    data: {
+      REQUEST_TYPE: "GETCATEGORIES",
+    },
+    success: function (response) {
+      console.log(response);
+
+      const $tableBody = $("#categoriesTableBody");
+
+      $tableBody.empty();
+
+      if (response.length > 0) {
+        $.each(response, function (index, category) {
+          const $row = $("<tr>");
+
+          $row.append($("<td>").text(category.ID));
+          $row.append($("<td>").text(category.NAME));
+
+          const $actionTd = $("<td>");
+          const $deleteButton = $("<button>")
+            .addClass("btn-delete-category btn btn-danger btn-sm")
+            .text("Delete")
+            .css("font-size", "12px")
+            .attr("data-id", category.ID);
+
+          $actionTd.append($deleteButton);
+          $row.append($actionTd);
+
+          $tableBody.append($row);
+        });
+      } else {
+        const $noDataRow = $("<tr>").append(
+          $("<td>")
+            .attr("colspan", 3)
+            .addClass("text-center")
+            .text("No Data Found!")
+        );
+        $tableBody.append($noDataRow);
+      }
+    },
+  });
+};
+
+$("#formAddCategory").submit(function (e) {
+  e.preventDefault();
+
+  var formData = $(this).serialize();
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/category.php",
+    data: formData,
+    success: function (response) {
+      console.log(response);
+
+      if (response == "200") {
+        AlertMessage("alert-success", "Category Added!");
+        $("#formAddCategory")[0].reset();
+
+        loadCategory();
+      } else {
+        AlertMessage("alert-danger", "Failed to Add!");
+      }
+    },
+  });
+});
+
+$(document).on("click", ".btn-delete-category", function (e) {
+  e.preventDefault();
+
+  var id = $(this).data("id");
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/category.php",
+    data: {
+      REQUEST_TYPE: "DELETECATEGORY",
+      ID: id,
+    },
+    success: function (response) {
+      console.log(response);
+
+      if (response == "200") {
+        AlertMessage("alert-success", "Category Deleted!");
+        loadCategory();
+      } else {
+        AlertMessage("alert-danger", "Failed to Delete!");
+      }
+    },
+  });
+});
+
+loadCategory();

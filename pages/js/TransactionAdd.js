@@ -73,6 +73,8 @@ const loadAddItemModalContents = () => {
 };
 
 const loadItemSelectList = (category) => {
+  $("#AddItemItemNameSelect").empty();
+
   $.ajax({
     type: "GET",
     url: "../backend/controller/inventory.php",
@@ -83,8 +85,6 @@ const loadItemSelectList = (category) => {
     },
     success: function (response) {
       if (response.length > 0) {
-        $("#AddItemItemNameSelect").empty();
-
         $("#AddItemItemNameSelect").append('<option value=""></option>');
 
         response.forEach(function (item) {
