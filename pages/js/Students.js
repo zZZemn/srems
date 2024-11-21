@@ -26,6 +26,13 @@ const loadStudent = (search, status) => {
                 "</a>"
             )
           );
+          $row.append(
+            $("<td>").html(
+              "<img src='../student-photos/" +
+                student.IMG +
+                "' class='btn-item-image' style='height: 30px; width: 30px; cursor: zoom-in;'>"
+            )
+          );
           $row.append($("<td>").text(student.NAME));
           $row.append($("<td>").text(student.EMAIL));
           $row.append($("<td>").text(student.CONTACT_NO));
@@ -74,7 +81,7 @@ const loadStudent = (search, status) => {
       } else {
         const $noDataRow = $("<tr>").append(
           $("<td>")
-            .attr("colspan", 7)
+            .attr("colspan", 8)
             .addClass("text-center")
             .text("No Data Found!")
         );
@@ -96,12 +103,15 @@ $("#btnAddStudent").click(function (e) {
 $("#formAddStudent").submit(function (e) {
   e.preventDefault();
 
-  var formData = $(this).serialize();
+  // var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
     url: "../backend/controller/student.php",
     type: "POST",
     data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
       console.log(response);
       if (response == 200) {
@@ -153,7 +163,6 @@ $(document).on("click", "#btnEditStudent", function (e) {
   $("#eStudentYear").val(YEAR);
   $("#eStudentSection").val(SECTION);
 
-
   $("#ModalEditStudent").modal("show");
 });
 
@@ -166,13 +175,17 @@ $("#formEditStudent").submit(function (e) {
   // const EMAIL = $("#eStudentEmail").val();
   // const CONTACT_NO = $("#eStudentContactNo").val();
 
-  var formData = $(this).serialize();
+  // var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
     type: "POST",
     url: "../backend/controller/student.php",
     data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
+      console.log(response);
       if (response == 200) {
         AlertMessage("alert-success", "Student details edited!");
         $("#formEditStudent")[0].reset();
@@ -251,5 +264,17 @@ $("#inputSearch").on("input", function (e) {
 
   loadStudent(search, status);
 });
+
+// Show image
+$(document).on("click", ".btn-item-image", function (e) {
+  e.preventDefault();
+  var src = $(this).attr("src");
+
+  $("#ModalItemImageImg").attr("src", src);
+  $("#ModalViewItemImage").modal("show");
+  console.log(src);
+});
+
+
 
 loadStudent("", "ALL");

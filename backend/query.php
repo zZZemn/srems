@@ -120,11 +120,18 @@ class Query extends db_connect
     // Students
     public function addStudent($post)
     {
-        $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE')");
+        if (isset($post['image_path'])) {
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?,'ACTIVE')");
+        } else {
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png','ACTIVE')");
+        }
 
         if ($query) {
-
-            $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
+            if (isset($post['image_path'])) {
+                $query->bind_param("ssssiss", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['image_path']);
+            } else {
+                $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
+            }
 
             if ($query->execute()) {
                 return 200;
@@ -138,10 +145,21 @@ class Query extends db_connect
 
     public function editStudent($post)
     {
-        $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ? WHERE `ID` = ?");
+        if (isset($post['image_path'])) {
+            $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ?, `IMG` = ? WHERE `ID` = ?");
+        
+        } else {
+            $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ? WHERE `ID` = ?");
+
+        }
 
         if ($query) {
-            $query->bind_param("ssssisi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['ID']);
+            if (isset($post['image_path'])) {
+                $query->bind_param("ssssissi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['image_path'], $post['ID']);
+            } else {
+                $query->bind_param("ssssisi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['ID']);
+            }
+
 
             if ($query->execute()) {
                 return 200;

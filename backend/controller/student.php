@@ -6,6 +6,36 @@ ini_set('display_errors', 1);
 include('../query.php');
 $query = new Query();
 
+
+function fileUpload($files)
+{
+    $targetDir = "../../student-photos/";
+
+    $today = date("Y-m-d H:i:s");
+    $fileNameCode = 'SREMSSTUDENTPHOTO-' . preg_replace('/[^A-Za-z0-9\-]/', '', $today);
+
+    $fileTmpPath = $files['studentImage']['tmp_name'];
+    $fileName = $files['studentImage']['name'];
+    $fileNameCmps = explode(".", $fileName);
+    $fileExtension = strtolower(end($fileNameCmps));
+
+    $newFileName = md5(time() . $fileNameCode) . '.' . $fileExtension;
+
+    $allowedfileExtensions = array('jpg', 'jpeg', 'png');
+
+    if (in_array($fileExtension, $allowedfileExtensions)) {
+        $dest_path = $targetDir . $newFileName;
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            return json_encode(array('status' => 200, 'file_name' => $newFileName, 'message' => 'Success.'));
+        } else {
+            return json_encode(array('status' => 400, 'message' => 'There was an error moving the uploaded file.'));
+        }
+    } else {
+        return json_encode(array('status' => 400, 'message' => 'Invalid file extension. Only jpg, jpeg, png, and gif are allowed.'));
+    }
+}
+
+
 if (isset($_POST['REQUEST_TYPE'])) {
     $reqType = $_POST['REQUEST_TYPE'];
 
@@ -25,7 +55,22 @@ if (isset($_POST['REQUEST_TYPE'])) {
         } elseif ($checkNo->num_rows > 0) {
             echo 'CONTACTNO_EXIST';
         } else {
-            echo $query->addStudent($_POST);
+
+            if (isset($_FILES['studentImage']) && $_FILES['studentImage']['error'] === UPLOAD_ERR_OK) {
+
+                $uploadFile = fileUpload($_FILES);
+                $uploadResponse = json_decode($uploadFile, true);
+
+                if ($uploadResponse['status'] == 200) {
+                    $_POST['image_path'] = $uploadResponse['file_name'];
+                    echo $query->addStudent($_POST);
+                } else {
+                    echo "File upload error: " . $uploadResponse['message'];
+                }
+
+            } else {
+                echo $query->addStudent($_POST);
+            }
         }
     } elseif ($reqType == 'EDITSTUDENT') {
 
@@ -69,7 +114,22 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 }
             }
 
-            echo $query->editStudent($_POST);
+
+            if (isset($_FILES['studentImage']) && $_FILES['studentImage']['error'] === UPLOAD_ERR_OK) {
+
+                $uploadFile = fileUpload($_FILES);
+                $uploadResponse = json_decode($uploadFile, true);
+
+                if ($uploadResponse['status'] == 200) {
+                    $_POST['image_path'] = $uploadResponse['file_name'];
+                    echo $query->editStudent($_POST);
+                } else {
+                    echo "File upload error: " . $uploadResponse['message'];
+                }
+
+            } else {
+                echo $query->editStudent($_POST);
+            }
         } else {
             echo '400';
             exit;

@@ -23,6 +23,7 @@ $getStudents = $query->getAll('students');
         <tr>
             <th>ID</th>
             <th>Student Code</th>
+            <th></th>
             <th>Name</th>
             <th>Email</th>
             <th>Contact No.</th>
@@ -82,6 +83,10 @@ $getStudents = $query->getAll('students');
                             <option value="F">F</option>
                         </select>
                     </div>
+                    <div class="mt-3">
+                        <label for="studentImage">Student Image:</label>
+                        <input type="file" class="form-control mt-1" name="studentImage" id="studentImage" accept="image/*">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -140,12 +145,27 @@ $getStudents = $query->getAll('students');
                             <option value="F">F</option>
                         </select>
                     </div>
+                    <div class="mt-3">
+                        <label for="studentImage">Student Image:</label>
+                        <input type="file" class="form-control mt-1" name="studentImage" id="studentImage" accept="image/*">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
                     <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalViewItemImage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <img id="ModalItemImageImg" src="" alt="Item">
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
