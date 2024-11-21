@@ -61,7 +61,10 @@ if (isset($_GET['tId'])) {
     </div>
 
     <div class="container card mt-2 p-3">
-        <h6><i class="bi bi-person-vcard"></i> Student Details:</h6>
+        <div class="d-flex justify-content-between">
+            <h6><i class="bi bi-person-vcard"></i> Student Details:</h6>
+            <img src="../student-photos/<?= $student['IMG'] ?>" alt="student photo" style="height: 60px; width: 60px; border: 1px solid gray; border-radius: 5%" class="mb-2 p-1">
+        </div>
         <ul class="list-group">
             <li class="list-group-item">Name: <span id="sdName"><?= $student['NAME'] ?></span></li>
             <li class="list-group-item">Email: <span id="sdEmail"><?= $student['EMAIL'] ?></span></li>
