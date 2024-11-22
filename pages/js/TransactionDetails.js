@@ -28,17 +28,22 @@ $("#formReturnTransaction").submit(function (e) {
 
   $("#btnReturnTransaction").attr("disabled", true);
 
-  var formData = $(this).serialize();
+  // var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
     url: "../backend/controller/transaction.php",
     type: "POST",
     data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
+      console.log(response);
+
       if (response == 200) {
         AlertMessage("alert-success", "Transcation Completed!");
         $("#formReturnTransaction")[0].reset();
-
+        $("#formReturnTransaction").modal("hide");
         sendEmail(
           $("#sdEmail").text(),
           $("#sdName").text(),

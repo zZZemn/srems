@@ -119,6 +119,17 @@ if (isset($_GET['tId'])) {
                 <input type="hidden" name="id" id="frmInputTId" value="<?= $transcation['ID'] ?>">
                 <div class="modal-body">
                     Are you sure that you want change this transaction status to returned?
+
+                    <hr>
+
+                    <div>
+                        <label for="rtnItemImg">Upload a Picture</label>
+                        <input type="file" class="form-control mt-1" name="rtnItemImg" id="rtnItemImg" accept="image/*" required>
+                    </div>
+                    <div class="mt-2">
+                        <label for="rtnRemarks">Remarks</label>
+                        <input type="text" class="form-control mt-1" name="rtnRemarks" id="rtnRemarks" placeholder="Input Remarks" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Yes</button>

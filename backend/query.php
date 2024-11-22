@@ -491,6 +491,24 @@ class Query extends db_connect
     }
 
 
+    public function updateRemarksAndReturnedImage($id, $img, $remarks)
+    {
+        $query = $this->conn->prepare("UPDATE `transaction` SET `IMG`='?',`REMARKS`='?' WHERE `ID` = '$id'");
+
+        if ($query) {
+            $query->bind_param('ss', $img, $remarks);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
 
     // Transaction details
 
