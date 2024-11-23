@@ -17,6 +17,9 @@ if (isset($_GET['tId'])) {
         $venue = $transcation['VENUE'];
         $teacher = $transcation['TEACHER'];
 
+        $img = $transcation['IMG'];
+        $remarks = $transcation['REMARKS'];
+
 
         $getStudent = $query->getById('students', $studId);
         $student = $getStudent->fetch_assoc();
@@ -105,6 +108,41 @@ if (isset($_GET['tId'])) {
             </table>
         </ul>
     </div>
+
+    <?php
+    if ($status == "RETURNED") {
+    ?>
+        <div class="container card mt-2 p-3">
+            <div class="d-flex justify-content-between">
+                <h6><i class="bi bi-hourglass"></i> Return Details:</h6>
+            </div>
+
+            <?php
+            if ($img != null) {
+            ?>
+                <div class="mt-2">
+                    <span style="font-style: italic;">Image:</span>
+                    <div>
+                        <img src="../returned-item-photos/<?= $img ?>" alt="IMG">
+                        <!-- <img src="../items-photos/default.jpg" alt="IMG"> -->
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
+
+            <div class="mt-2">
+                <span style="font-style: italic;">Remarks:</span>
+                <div class="card p-2" style="font-size: 12px;">
+                    <?= $remarks ?>
+                </div>
+            </div>
+        </div>
+    <?php
+    }
+    ?>
+
+
 </div>
 
 
