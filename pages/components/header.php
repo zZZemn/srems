@@ -97,6 +97,36 @@ if (!$_SESSION['id']) {
             overflow-y: auto;
             transition: 0.5s;
         }
+
+
+        /* ---------- */
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-profile-button {
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0);
+            color: white;
+            font-size: 30px;
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            z-index: 1000;
+            background-color: rgb(233, 233, 233);
+            color: black;
+            list-style: none;
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 5px;
+
+            display: none;
+        }
     </style>
 
     <div
@@ -113,9 +143,18 @@ if (!$_SESSION['id']) {
                 <h5 class="m-0">SREMS</h5>
             </a>
         </div>
-        <div class="text-light">
-            <span class="p-0 fw-semibold">Hello, <?= ucwords(strtolower($userInfo['USERNAME'])) ?></span>
+
+        <div class="nav-dropdown d-flex align-items-center">
+            <span class="p-0 fw-semibold me-2" style="font-size: 12px;">Hello, <?= ucwords(strtolower($userInfo['USERNAME'])) ?></span>
+
+            <button class="nav-profile-button" id="navDropdownMenuButton" type="button"><i class="bi bi-person-circle"></i></button>
+            <ul class="nav-dropdown-menu" id="navDropdownMenu">
+                <li><a class="dropdown-item" href="Settings.php" id="settings">Settings</a></li>
+                <li><a class="dropdown-item" href="../backend/controller/logout.php" id="logout">Logout</a></li>
+            </ul>
         </div>
+
+
     </nav>
 
     <aside class="side-bar d-flex flex-column" id="side-bar">
@@ -124,7 +163,6 @@ if (!$_SESSION['id']) {
         <a href="Students.php"><i class="bi bi-person-badge"></i> Students</a>
         <a href="Inventory.php"><i class="bi bi-hourglass"></i> Inventory</a>
         <a href="Backup.php"><i class="bi bi-database-gear"></i> Back up</a>
-        <a href="../backend/controller/logout.php"><i class="bi bi-box-arrow-left"></i> Logout</a>
     </aside>
 
     <div class="main-container container-fluid pt-2" id="main-container">

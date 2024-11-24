@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  var IsNavDropdownMenu = false;
+
   var isSideBarOpen = true;
   var btnToggleSideBar = $("#btn-toggle-side-bar");
   var sidebar = $("#side-bar");
@@ -42,6 +44,18 @@ $(document).ready(function () {
 
   $(window).resize(function () {
     checkWindowSize();
+  });
+
+  $("#navDropdownMenuButton").click(function (e) {
+    e.preventDefault();
+
+    if (IsNavDropdownMenu) {
+      $("#navDropdownMenu").css("display", "none");
+    } else {
+      $("#navDropdownMenu").css("display", "block");
+    }
+
+    IsNavDropdownMenu = !IsNavDropdownMenu;
   });
 
   checkWindowSize();
