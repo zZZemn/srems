@@ -13,12 +13,19 @@ $(document).ready(function () {
         var barrowedItemsChart = new Chart(biCtx, {
           type: "line",
           data: {
-            labels: response.labels,
+            labels: response.bi.labels,
             datasets: [
               {
-                label: "Barrowed Items",
-                data: response.numbers,
+                label: "Borrowed Items",
+                data: response.bi.numbers,
                 borderColor: "rgba(75, 192, 192, 1)",
+                fill: true,
+                tension: 0.1,
+              },
+              {
+                label: "Added Student",
+                data: response.student.numbers,
+                borderColor: "rgba(153, 102, 255, 1)",
                 fill: true,
                 tension: 0.1,
               },

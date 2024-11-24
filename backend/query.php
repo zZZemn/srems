@@ -263,6 +263,29 @@ class Query extends db_connect
     }
 
 
+    public function getStudentCountsPerMonth()
+    {
+        $query = $this->conn->prepare("
+        SELECT YEAR(DATE_ADDED) AS year, MONTH(DATE_ADDED) AS month, COUNT(*) AS student_count
+        FROM students
+        WHERE YEAR(DATE_ADDED) = YEAR(CURDATE())
+        GROUP BY YEAR(DATE_ADDED), MONTH(DATE_ADDED)
+        ORDER BY year, month
+    ");
+
+        if ($query) {
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
 
     // Inventory
     public function addInventory($post)
@@ -382,7 +405,7 @@ class Query extends db_connect
     // Transaction
     public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue)
     {
-        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `VENUE`, `TEACHER`,`SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'BARROWED')");
+        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `VENUE`, `TEACHER`,`SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'BORROWED')");
 
         if ($query) {
             $sentEmailBorrowed = 1;

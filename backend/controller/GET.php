@@ -21,25 +21,53 @@ if (isset($_GET['REQUEST_TYPE'])) {
         header('Content-Type: application/json');
         echo json_encode($data);
     } elseif ($reqType == "GETBIDASHBOARDDATA") {
-        $labels = [];
-        $numbers = [];
+        $studentData = [];
+        $biData = [];
 
         $getData = $query->getBINumbersPerMonth();
+        $biLabels = [];
+        $biNumbers = [];
 
         foreach ($getData as $row) {
             $month = $row['month'];
             $transaction_count = $row['transaction_count'];
 
-            $dateObj   = DateTime::createFromFormat('!m', $month);
+            $dateObj = DateTime::createFromFormat('!m', $month);
             $monthName = $dateObj->format('F');
 
-            $labels[] = $monthName;
-            $numbers[] = $transaction_count;
+            $biLabels[] = $monthName;
+            $biNumbers[] = $transaction_count;
         }
 
+        $biData = [
+            "labels" => $biLabels,
+            "numbers" => $biNumbers
+        ];
+
+        // Get Student counts per month
+        $getStudentData = $query->getStudentCountsPerMonth();
+        $studentLabels = [];
+        $studentNumbers = [];
+
+        foreach ($getStudentData as $row) {
+            $month = $row['month'];
+            $transaction_count = $row['student_count'];
+
+            $dateObj = DateTime::createFromFormat('!m', $month);
+            $monthName = $dateObj->format('F');
+
+            $studentLabels[] = $monthName;
+            $studentNumbers[] = $transaction_count;
+        }
+
+        $studentData = [
+            "labels" => $studentLabels,
+            "numbers" => $studentNumbers
+        ];
+
         $data = [
-            "labels" => $labels,
-            "numbers" => $numbers
+            "bi" => $biData,
+            "student" => $studentData
         ];
 
         header('Content-Type: application/json');

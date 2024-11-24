@@ -12,7 +12,7 @@ $getTransaction = $query->getAll('transaction');
     <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
         <option value="ALL">All</option>
         <option value="OVERDUE">Overdue</option>
-        <option value="BARROWED">Barrowed</option>
+        <option value="BORROWED">Borrowed</option>
         <option value="RETURNED">Returned</option>
     </select>
     <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
