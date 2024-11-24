@@ -4,6 +4,9 @@ include("components/header.php");
 $noOfStudents = $query->countStudent();
 $noOfItems = $query->countInventory();
 
+$studentAddedThisMonth = $query->countStudentAddedThisMonth();
+
+$noOfTransactionThisMonth = $query->countTransactionThisMonth();
 ?>
 
 
@@ -26,6 +29,19 @@ $noOfItems = $query->countInventory();
     </div>
 
     <div class="card p-3 m-2 w-50" style="border-left: 5px solid #007bff;">
+        <h6 class="m-0">Students added this month</h6>
+        <hr>
+        <div class="text-secondary">
+            <span style="font-size: 50px">
+                <i class="bi bi-person-badge"></i>
+            </span>
+            <span class="ms-5 " style="font-size: 50px">
+                <?= $studentAddedThisMonth ?>
+            </span>
+        </div>
+    </div>
+
+    <div class="card p-3 m-2 w-50" style="border-left: 5px solid #007bff;">
         <h6 class="m-0">Total number of items</h6>
         <hr>
         <div class="text-secondary">
@@ -37,6 +53,20 @@ $noOfItems = $query->countInventory();
             </span>
         </div>
     </div>
+
+    <div class="card p-3 m-2 w-50" style="border-left: 5px solid #007bff;">
+        <h6 class="m-0">Total transaction this month</h6>
+        <hr>
+        <div class="text-secondary">
+            <span style="font-size: 50px">
+                <i class="bi bi-diagram-3-fill"></i>
+            </span>
+            <span class="ms-5 " style="font-size: 50px">
+                <?= $noOfTransactionThisMonth ?>
+            </span>
+        </div>
+    </div>
+
 </div>
 
 <canvas id="biChart" width="400" height="200">

@@ -121,9 +121,9 @@ class Query extends db_connect
     public function addStudent($post)
     {
         if (isset($post['image_path'])) {
-            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?,'ACTIVE')");
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(),'ACTIVE')");
         } else {
-            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png','ACTIVE')");
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
         }
 
         if ($query) {
@@ -147,10 +147,8 @@ class Query extends db_connect
     {
         if (isset($post['image_path'])) {
             $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ?, `IMG` = ? WHERE `ID` = ?");
-        
         } else {
             $query = $this->conn->prepare("UPDATE `students` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ? WHERE `ID` = ?");
-
         }
 
         if ($query) {
@@ -239,6 +237,23 @@ class Query extends db_connect
     public function countStudent()
     {
         $query = $this->conn->prepare("SELECT COUNT(*) as student_count FROM `students` WHERE STATUS = 'ACTIVE'");
+
+        $query->execute();
+
+        $result = $query->get_result();
+        $studentRes = $result->fetch_assoc();
+        return $studentRes['student_count'];
+    }
+
+    public function countStudentAddedThisMonth()
+    {
+        $query = $this->conn->prepare("
+        SELECT COUNT(*) as student_count 
+        FROM `students` 
+        WHERE `STATUS` = 'ACTIVE' 
+        AND MONTH(`DATE_ADDED`) = MONTH(CURDATE()) 
+        AND YEAR(`DATE_ADDED`) = YEAR(CURDATE())
+    ");
 
         $query->execute();
 
@@ -507,6 +522,23 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+    public function countTransactionThisMonth()
+    {
+        $query = $this->conn->prepare("
+        SELECT COUNT(*) as transaction_count 
+        FROM `transaction` 
+        WHERE MONTH(`DATE`) = MONTH(CURDATE()) 
+        AND YEAR(`DATE`) = YEAR(CURDATE())
+    ");
+
+        $query->execute();
+
+        $result = $query->get_result();
+        $transactionRes = $result->fetch_assoc();
+        return $transactionRes['transaction_count'];
+    }
+
 
 
 
