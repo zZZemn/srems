@@ -31,8 +31,10 @@ const searchStudentCode = (studCode) => {
       STUDENT_CODE: studCode,
     },
     success: function (response) {
+      console.log(response);
+
       if (response != 400) {
-        if (response.STTATUS == "ACTIVE") {
+        if (response.STATUS == "ACTIVE") {
           $("#sdName").text(response.NAME);
           $("#sdEmail").text(response.EMAIL);
           $("#sdContactNo").text(response.CONTACT_NO);
