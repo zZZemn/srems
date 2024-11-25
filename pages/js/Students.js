@@ -221,6 +221,14 @@ $(document).on("click", "#btnDeactivate", function (e) {
   const ID = $(this).data("id");
   const STATUS = $(this).data("status");
 
+  const confirmation = confirm(
+    "Are you sure you want to change the student's status?"
+  );
+
+  if (!confirmation) {
+    return;
+  }
+
   $.ajax({
     type: "POST",
     url: "../backend/controller/student.php",
@@ -274,7 +282,5 @@ $(document).on("click", ".btn-item-image", function (e) {
   $("#ModalViewItemImage").modal("show");
   console.log(src);
 });
-
-
 
 loadStudent("", "ALL");

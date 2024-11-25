@@ -74,6 +74,12 @@ $(document).on("click", ".btn-delete-teacher", function (e) {
 
   var id = $(this).data("id");
 
+  const confirmation = confirm("Are you sure you want to delete this teacher?");
+
+  if (!confirmation) {
+    return;
+  }
+
   $.ajax({
     type: "POST",
     url: "../backend/controller/teacher.php",
@@ -171,6 +177,14 @@ $(document).on("click", ".btn-delete-category", function (e) {
   e.preventDefault();
 
   var id = $(this).data("id");
+
+  const confirmation = confirm(
+    "Are you sure you want to delete this category?"
+  );
+
+  if (!confirmation) {
+    return;
+  }
 
   $.ajax({
     type: "POST",

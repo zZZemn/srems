@@ -10,11 +10,11 @@ include("components/header.php");
 <hr>
 
 
-<h6>Account</h6>
+<!-- <h6>Account</h6>
 
 <p>Change Password</p>
 
-<hr>
+<hr> -->
 
 <h6>Selection Data</h6>
 

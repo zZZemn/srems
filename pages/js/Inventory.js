@@ -188,6 +188,14 @@ $(document).on("click", "#btnDeactivate", function (e) {
   const ID = $(this).data("id");
   const STATUS = $(this).data("status");
 
+  const confirmation = confirm(
+    "Are you sure you want to change the item's status?"
+  );
+
+  if (!confirmation) {
+    return;
+  }
+
   $.ajax({
     type: "POST",
     url: "../backend/controller/inventory.php",
