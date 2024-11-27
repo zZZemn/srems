@@ -112,6 +112,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
             $inventoryList[] = [
                 'ID' => $invId,
+                'BARCODE' => $inv['BARCODE'],
                 'INV_CODE' => $inv['INV_CODE'],
                 'ITEM_NAME' => $inv['ITEM_NAME'],
                 'QTY' => $invQty,
@@ -152,6 +153,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
             $data[] = [
                 'ID' => $invId,
+                'BARCODE' => $inv['BARCODE'],
                 'INV_CODE' => $inv['INV_CODE'],
                 'ITEM_NAME' => $inv['ITEM_NAME'],
                 'QTY' => $invQty,

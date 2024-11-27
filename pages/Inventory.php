@@ -10,6 +10,7 @@ $getCategories = $query->getAll('categories');
 
     <div>
         <button class="btn btn-sm btn-dark" id="btnExportInventory"><i class="bi bi-download"></i> Export</button>
+        <a href="Barcodes.php" class="btn btn-sm btn-dark"><i class="bi bi-eye"></i> Show Barcodes</a>
         <button class="btn btn-sm btn-primary" id="btnAddInventory"><i class="bi bi-plus-lg"></i> Add</button>
     </div>
 </div>
@@ -158,6 +159,7 @@ $getCategories = $query->getAll('categories');
 </div>
 
 <?php include("components/footer.php") ?>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="js/Inventory.js"></script>
 </body>
 

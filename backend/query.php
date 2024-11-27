@@ -290,10 +290,12 @@ class Query extends db_connect
     // Inventory
     public function addInventory($post)
     {
+        $barCode = substr(md5(uniqid(rand(), true)), 0, 13);
+
         if (isset($post['image_path'])) {
-            $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`, `STATUS`) VALUES (?, ?, ?, ?, ?, 'ACTIVE')");
+            $query = $this->conn->prepare("INSERT INTO `inventory`(`BARCODE` ,`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`, `STATUS`) VALUES ('$barCode' , ?, ?, ?, ?, ?, 'ACTIVE')");
         } else {
-            $query = $this->conn->prepare("INSERT INTO `inventory`(`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`,`STATUS`) VALUES (?, ?, ?, ?, 'default.jpg','ACTIVE')");
+            $query = $this->conn->prepare("INSERT INTO `inventory`(`BARCODE` ,`INV_CODE`, `ITEM_NAME`, `QTY`, `CATEGORY`, `IMG`,`STATUS`) VALUES ('$barCode' , ?, ?, ?, ?, 'default.jpg','ACTIVE')");
         }
 
         if ($query) {
