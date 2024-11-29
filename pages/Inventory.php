@@ -9,6 +9,7 @@ $getCategories = $query->getAll('categories');
     <h4 class="text-primary">Inventory</h4>
 
     <div>
+        <button class="btn btn-sm btn-dark" id="btnImportInventory"><i class="bi bi-upload"></i> Import</button>
         <button class="btn btn-sm btn-dark" id="btnExportInventory"><i class="bi bi-download"></i> Export</button>
         <a href="Barcodes.php" class="btn btn-sm btn-dark"><i class="bi bi-eye"></i> Show Barcodes</a>
         <button class="btn btn-sm btn-primary" id="btnAddInventory"><i class="bi bi-plus-lg"></i> Add</button>
@@ -158,9 +159,35 @@ $getCategories = $query->getAll('categories');
     </div>
 </div>
 
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalUploadCSV">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Inventory Items</h5>
+            </div>
+            <form id="formImportInventory">
+                <div class="modal-body">
+                    <div class="mt-3">
+                        <label for="csv">Import:</label>
+                        <input type="file" class="form-control mt-1" name="csv" id="csvFile" accept=".csv" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <?php include("components/footer.php") ?>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="js/Inventory.js"></script>
+<script src="js/InventoryImport.js"></script>
 </body>
 
 </html>
