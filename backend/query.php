@@ -533,10 +533,10 @@ class Query extends db_connect
 
     public function updateRemarksAndReturnedImage($id, $img, $remarks)
     {
-        $query = $this->conn->prepare("UPDATE `transaction` SET `IMG`='?',`REMARKS`='?' WHERE `ID` = '$id'");
+        $query = $this->conn->prepare("UPDATE `transaction` SET `IMG` = ?, `REMARKS` = ? WHERE `ID` = ?");
 
         if ($query) {
-            $query->bind_param('ss', $img, $remarks);
+            $query->bind_param('ssi', $img, $remarks, $id);
 
             if ($query->execute()) {
                 return 200;
@@ -547,6 +547,7 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
 
     public function countTransactionThisMonth()
     {
