@@ -4,11 +4,35 @@ include("components/header.php");
 $getInv = $query->getAll("inventory");
 
 ?>
-<div class="d-flex justify-content-between align-items-center">
+
+<style>
+    .print-container {}
+
+    @media print {
+        #main-container {
+            left: 0 !important;
+            top: 0 !important;
+            padding: 10px !important;
+            width: 100% !important;
+        }
+
+        .print-container {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            width: 100% !important;
+        }
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center d-print-none">
     <h4 class="text-primary">Barcodes</h4>
+    <button class="btn btn-sm btn-dark" id="btn-print">Print Barcodes</button>
 </div>
 
-<div class="container">
+<div class="print-container">
     <div class="row">
         <?php
         $getInv = $query->getAll("inventory");
@@ -31,6 +55,13 @@ $getInv = $query->getAll("inventory");
 
 
 <?php include("components/footer.php") ?>
+<script>
+    $("#btn-print").click(function(e) {
+        e.preventDefault();
+
+        window.print();
+    });
+</script>
 </body>
 
 </html>

@@ -137,7 +137,7 @@ if (!$_SESSION['id']) {
         <span id="AlertMessage"></span>
     </div>
 
-    <nav class="d-flex justify-content-between align-items-center px-3 py-2 bg-dark  text-light">
+    <nav class="d-flex justify-content-between align-items-center px-3 py-2 bg-dark text-light d-print-none">
         <div class="d-flex align-items-center">
             <button class="btn p-0 text-light me-2" id="btn-toggle-side-bar" style="font-size: 30px;"><i class="bi bi-list"></i></button>
             <a href="Dashboard.php">
@@ -158,7 +158,7 @@ if (!$_SESSION['id']) {
 
     </nav>
 
-    <aside class="side-bar d-flex flex-column" id="side-bar">
+    <aside class="side-bar d-flex flex-column d-print-none" id="side-bar">
         <a href="Dashboard.php"><i class="bi bi-bar-chart"></i> Dashboard</a>
         <a href="Transaction.php"><i class="bi bi-person-up"></i> Transaction</a>
         <a href="Students.php"><i class="bi bi-person-badge"></i> Students</a>
