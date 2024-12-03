@@ -261,7 +261,7 @@ const exportTableToCSV = (filename) => {
   rows.each(function () {
     var row = [];
     $(this)
-      .find("td, th")
+      .find("td:not(:last-child), th:not(:last-child)")
       .each(function () {
         row.push($(this).text());
       });
