@@ -405,16 +405,16 @@ class Query extends db_connect
 
 
     // Transaction
-    public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue)
+    public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue, $signature)
     {
-        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `VENUE`, `TEACHER`,`SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'BORROWED')");
+        $query = $this->conn->prepare("INSERT INTO `transaction`(`TRANSACTION_CODE`, `CUSTODIAN_ID`, `STUDENT_ID`, `DATE`, `DUEDATE`, `VENUE`, `TEACHER`,`SENT_EMAIL_BARROWED`, `SENT_EMAIL_RETURNED`, `SENT_EMAIL_OVERDUE`, `SIGNATURE`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,'BORROWED')");
 
         if ($query) {
             $sentEmailBorrowed = 1;
             $sentEmailReturned = 0;
             $sentEmailOverdue = 0;
 
-            $query->bind_param('siissssiii', $code, $uId, $sId, $date, $dueDate, $venue, $teacher, $sentEmailBorrowed, $sentEmailReturned, $sentEmailOverdue);
+            $query->bind_param('siissssiiis', $code, $uId, $sId, $date, $dueDate, $venue, $teacher, $sentEmailBorrowed, $sentEmailReturned, $sentEmailOverdue, $signature);
 
             if ($query->execute()) {
                 return 200;

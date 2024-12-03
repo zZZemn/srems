@@ -1,3 +1,14 @@
+// Signature
+var urlBackground = "../photos/signature-bg.png";
+var imageBackground = new Image();
+imageBackground.src = urlBackground;
+imageBackground.setAttribute("crossorigin", "anonymous");
+$("#drawPad").drawpad();
+var contextCanvas = $("#drawPad canvas").get(0).getContext("2d");
+imageBackground.onload = function () {
+  contextCanvas.drawImage(imageBackground, 0, 0);
+};
+
 const itemsArray = [];
 
 var barrowedInfo = {};
@@ -289,6 +300,9 @@ $("#frmTransactionAdd").submit(function (e) {
     return;
   }
 
+  var base64ImageSignature = $("#drawPad canvas").get(0).toDataURL();
+  $("#base64ImagePreview").attr("src", base64ImageSignature);
+
   $.ajax({
     url: "../backend/controller/student.php",
     type: "GET",
@@ -343,6 +357,7 @@ $("#frmTransactionAdd").submit(function (e) {
         DUE_DATE: dueDate,
         TEACHER: teacher,
         VENUE: venue,
+        SIGNATURE: base64ImageSignature,
         ITEMS: JSON.stringify(itemsArray),
       },
       success: function (response) {

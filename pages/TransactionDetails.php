@@ -20,6 +20,8 @@ if (isset($_GET['tId'])) {
         $img = $transcation['IMG'];
         $remarks = $transcation['REMARKS'];
 
+        $signature = $transcation['SIGNATURE'];
+
 
         $getStudent = $query->getById('students', $studId);
         $student = $getStudent->fetch_assoc();
@@ -141,6 +143,16 @@ if (isset($_GET['tId'])) {
     <?php
     }
     ?>
+
+
+    <div class="container card mt-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Signature:</h6>
+        </div>
+
+        <img />
+        <img id="SignatureImage" alt="Signature Image Preview" src="<?= $signature ?>" style="height: 300px; width: 300px;" />
+    </div>
 
 
 </div>

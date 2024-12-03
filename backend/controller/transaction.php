@@ -47,6 +47,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
         $itemsArray = json_decode($_POST['ITEMS'], true);
         $teacher = $_POST['TEACHER'];
         $venue = $_POST['VENUE'];
+        $signature = $_POST['SIGNATURE'];
 
         $today = date("Y-m-d H:i:s");
 
@@ -69,7 +70,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
             exit;
         }
 
-        $qTransaction = $query->insertTransaction($transactionCode, $userId, $studentId, $today, $dueDate, $teacher, $venue);
+        $qTransaction = $query->insertTransaction($transactionCode, $userId, $studentId, $today, $dueDate, $teacher, $venue, $signature);
         if ($qTransaction == 200) {
             foreach ($itemsArray as $item) {
                 $id = $item['itemId'];

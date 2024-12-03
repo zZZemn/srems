@@ -87,6 +87,22 @@ $categories = $query->getAll('categories');
 
     </div>
 
+
+    <div class="container card mt-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Signature:</h6>
+        </div>
+
+        <div id="drawPad" class="drawpad-dashed" style="height: 300px; width: 300px"></div>
+        <input type='hidden' id='outputBase64FormInput' name='mybase64image'>
+
+
+        <hr>
+
+        <img id="base64ImagePreview" alt="Signature Image Preview" />
+    </div>
+
+
     <div class="mt-5 d-flex justify-content-end">
         <a href="Transaction.php" class="btn btn-sm btn-dark me-1">Back to list</a>
         <button type="submit" class="btn btn-sm btn-primary" id="BtnSaveTransaction">Save</button>
@@ -148,6 +164,7 @@ $categories = $query->getAll('categories');
 
 
 <?php include("components/footer.php") ?>
+<script src="https://cnbilgin.github.io/jquery-drawpad/jquery-drawpad.js"></script>
 <script src="js/TransactionAdd.js"></script>
 </body>
 
