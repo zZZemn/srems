@@ -83,3 +83,55 @@ $("#formReturnTransaction").submit(function (e) {
     },
   });
 });
+
+$(document).on("click", ".btn-replace", function (e) {
+  e.preventDefault();
+
+  var tdId = $(this).data("tdid");
+  var dmgQty = $(this).data("dmgqty");
+  var replacedItemsQty = $(this).data("replacedqty");
+
+  console.log(tdId);
+  console.log(dmgQty);
+
+  $("#replaceTD_ID").val(tdId);
+  $("#replace_dmg_qty").val(dmgQty);
+  $("#replace_qty").attr("max", dmgQty - replacedItemsQty);
+
+  $("#ModalReplaceItems").modal("show");
+});
+
+$("#formReplaceItems").submit(function (e) {
+  e.preventDefault();
+
+  var tdId = $("#replaceTD_ID").val();
+  var qty = $("#replace_qty").val();
+  var dmgQty = $("#replace_dmg_qty").val();
+
+  console.log(tdId);
+  console.log(qty);
+  console.log(dmgQty);
+
+  var formData = new FormData(this);
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/transaction.php",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (response) {
+      console.log(response);
+
+      if (response == 200) {
+        AlertMessage("alert-success", "Replacement Completed!");
+        $("#formReplaceItems")[0].reset();
+        $("#ModalReplaceItems").modal("hide");
+        window.location.reload();
+      } else {
+        AlertMessage("alert-danger", "Failed to complete replacement!");
+      }
+
+    },
+  });
+});

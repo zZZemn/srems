@@ -477,17 +477,24 @@ class Query extends db_connect
                 s.NAME, 
                 acc.USERNAME,
                 CASE 
-                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 AND t.STATUS = 'RETURNED' THEN 
-                        CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
-                    ELSE t.STATUS
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 AND SUM(ri.QTY) > 0 THEN 
+                        CONCAT(t.STATUS, ' with damaged and with replacement')
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 THEN 
+                        CONCAT(t.STATUS, ' with damaged')
+                    WHEN SUM(ri.QTY) > 0 THEN 
+                        CONCAT(t.STATUS, ' with replacement')
+                    ELSE 
+                        t.STATUS
                 END AS STATUS
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
             LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
-            WHERE (t.TRANSACTION_CODE LIKE ? 
-            OR s.student_code LIKE ? 
-            OR s.NAME LIKE ?)
+            LEFT JOIN `replaced_items` AS ri ON ri.TD_ID = td.ID
+            WHERE 
+                (t.TRANSACTION_CODE LIKE ? 
+                OR s.student_code LIKE ? 
+                OR s.NAME LIKE ?)
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
@@ -511,24 +518,35 @@ class Query extends db_connect
                 s.NAME, 
                 acc.USERNAME,
                 CASE 
-                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 AND t.STATUS = 'RETURNED' THEN 
-                        CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
-                    ELSE t.STATUS
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 
+                         AND SUM(ri.QTY) > 0 
+                         AND t.STATUS = 'RETURNED' THEN 
+                        CONCAT(t.STATUS, ' with damaged and with replacement')
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 
+                         AND t.STATUS = 'RETURNED' THEN 
+                        CONCAT(t.STATUS, ' with damaged')
+                    WHEN SUM(ri.QTY) > 0 
+                         AND t.STATUS = 'RETURNED' THEN 
+                        CONCAT(t.STATUS, ' with replacement')
+                    ELSE 
+                        t.STATUS
                 END AS STATUS
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
             LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
-            WHERE (t.TRANSACTION_CODE LIKE ? 
-            OR s.student_code LIKE ? 
-            OR s.NAME LIKE ?)
-            AND t.STATUS = 'RETURNED'
-            AND EXISTS (
-                SELECT 1 
-                FROM `transaction_details` AS td_check
-                WHERE td_check.TRANS_CODE = t.TRANSACTION_CODE
-                AND td_check.DAMAGED_QTY > 0
-            )
+            LEFT JOIN `replaced_items` AS ri ON ri.TD_ID = td.ID
+            WHERE 
+                (t.TRANSACTION_CODE LIKE ? 
+                OR s.student_code LIKE ? 
+                OR s.NAME LIKE ?)
+                AND t.STATUS = 'RETURNED'
+                AND EXISTS (
+                    SELECT 1 
+                    FROM `transaction_details` AS td_check
+                    WHERE td_check.TRANS_CODE = t.TRANSACTION_CODE
+                    AND td_check.DAMAGED_QTY > 0
+                )
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
@@ -539,22 +557,32 @@ class Query extends db_connect
                 s.NAME, 
                 acc.USERNAME,
                 CASE 
-                    WHEN t.STATUS = 'RETURNED' AND SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 THEN 
+                    WHEN t.STATUS = 'RETURNED' 
+                         AND SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 
+                         AND SUM(ri.QTY) > 0 THEN 
+                        CONCAT(t.STATUS, ' with damaged and with replacement')
+                    WHEN t.STATUS = 'RETURNED' 
+                         AND SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 THEN 
                         CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
-                    ELSE t.STATUS
+                    WHEN t.STATUS = 'RETURNED' 
+                         AND SUM(ri.QTY) > 0 THEN 
+                        CONCAT(t.STATUS, ' with replacement')
+                    ELSE 
+                        t.STATUS
                 END AS STATUS
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
             LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
-            WHERE (t.TRANSACTION_CODE LIKE ? 
-            OR s.student_code LIKE ? 
-            OR s.NAME LIKE ?)
-            AND t.STATUS = ?
+            LEFT JOIN `replaced_items` AS ri ON ri.TD_ID = td.ID
+            WHERE 
+                (t.TRANSACTION_CODE LIKE ? 
+                OR s.student_code LIKE ? 
+                OR s.NAME LIKE ?)
+                AND t.STATUS = ?
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
-        
         }
 
         if ($query) {
@@ -760,6 +788,44 @@ class Query extends db_connect
 
             if ($query->execute()) {
                 return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+    // replaced_items
+    public function replaceItem($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `replaced_items`(`TD_ID`, `QTY`, `DATE`) VALUES (?, ?, CURDATE())");
+
+        if ($query) {
+            $query->bind_param('ii', $post['td_id'], $post['qty']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+    public function getReplacedItemQty($id)
+    {
+        $query = $this->conn->prepare("SELECT SUM(QTY) AS replaced_qty FROM `replaced_items` WHERE `TD_ID` = ?");
+
+        if ($query) {
+            $query->bind_param('i', $id);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
             } else {
                 die("Execution failed: " . $query->error);
             }

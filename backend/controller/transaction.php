@@ -136,6 +136,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
             echo $query->changeStatus('transaction', $id, 'RETURNED');
             exit;
         }
+    } elseif ($reqType == "REPLACEITEMS") {
+        echo $query->replaceItem($_POST);
     }
 } elseif (isset($_GET['REQUEST_TYPE'])) {
     $reqType = $_GET['REQUEST_TYPE'];

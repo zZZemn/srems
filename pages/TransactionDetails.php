@@ -96,12 +96,21 @@ if (isset($_GET['tId'])) {
                     while ($td = $getTransctionD->fetch_assoc()) {
                         $getInventory = $query->getById('inventory', $td['INV_ID']);
                         $inv = $getInventory->fetch_assoc();
+
+                        $replacedItemQty = 0;
+                        $getReplacedItemQty = $query->getReplacedItemQty($td['ID']);
+                        if ($getReplacedItemQty->num_rows > 0) {
+                            $ReplacedItemQty = $getReplacedItemQty->fetch_assoc();
+
+                            $replacedItemQty += $ReplacedItemQty['replaced_qty'];
+                        }
+
                     ?>
                         <tr>
                             <td><?= $td['ID'] ?></td>
                             <td><?= $inv['ITEM_NAME'] ?></td>
                             <td><?= $td['QTY'] ?></td>
-                            <td>
+                            <td class="d-flex">
                                 <input
                                     class="form-control input-damage-qty"
                                     data-id="<?= $td['ID'] ?>"
@@ -115,6 +124,22 @@ if (isset($_GET['tId'])) {
                                     <?php
                                     echo ($status == "RETURNED") ? 'disabled' : ''
                                     ?> />
+                                <?php
+                                if ($status == "RETURNED" && $td['DAMAGED_QTY'] > 0 && $td['DAMAGED_QTY'] > $replacedItemQty) {
+                                ?>
+                                    <button class="btn btn-sm btn-primary ms-2 btn-replace"
+                                        data-tdid="<?= $td['ID'] ?>"
+                                        data-dmgqty="<?= $td['DAMAGED_QTY'] ?>"
+                                        data-replacedqty="<?= $replacedItemQty ?>">Replace</button>
+                                <?php
+                                }
+
+                                if ($replacedItemQty > 0) {
+                                ?>
+                                    <span class="text-success ms-2" style="font-size: 12px;"><?= $replacedItemQty ?> Replaced Item/s</span>
+                                <?php
+                                }
+                                ?>
                             </td>
                         </tr>
                     <?php
@@ -203,6 +228,33 @@ if (isset($_GET['tId'])) {
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalReplaceItems">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Replace Items</h5>
+            </div>
+            <form id="formReplaceItems">
+                <input type="hidden" name="REQUEST_TYPE" value="REPLACEITEMS">
+                <input type="hidden" id="replaceTD_ID" name="td_id">
+                <input type="hidden" id="replace_dmg_qty" name="dmg_qty">
+                <div class="modal-body">
+                    <div class="mt-2">
+                        <label for="rtnRemarks">Quantity</label>
+                        <input type="number" class="form-control mt-1" name="qty" id="replace_qty" placeholder="Quantity" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <input type="hidden" id="txtHiddenTCode" value="<?= $tCode ?>">
 
