@@ -35,6 +35,7 @@ $getCategories = $query->getAll('categories');
     <thead>
         <tr>
             <th>ID</th>
+            <th>Barcode</th>
             <th>Inventory Code</th>
             <th></th>
             <th>Item</th>

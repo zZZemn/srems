@@ -18,6 +18,8 @@ const loadInventory = (search, category) => {
 
           $row.append($("<td>").text(inv.ID));
 
+          $row.append($("<td>").text(inv.BARCODE));
+
           $row.append($("<td>").text(inv.INV_CODE));
           $row.append(
             $("<td>").html(
