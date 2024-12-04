@@ -472,13 +472,23 @@ class Query extends db_connect
 
         if ($status == 'ALL') {
             $query = $this->conn->prepare("
-            SELECT t.*, s.NAME, acc.USERNAME
+            SELECT 
+                t.*, 
+                s.NAME, 
+                acc.USERNAME,
+                CASE 
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 AND t.STATUS = 'RETURNED' THEN 
+                        CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
+                    ELSE t.STATUS
+                END AS STATUS
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
-            WHERE t.TRANSACTION_CODE LIKE ? 
+            LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
+            WHERE (t.TRANSACTION_CODE LIKE ? 
             OR s.student_code LIKE ? 
-            OR s.NAME LIKE ?
+            OR s.NAME LIKE ?)
+            GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
         } elseif ($status == 'OVERDUE') {
@@ -494,22 +504,61 @@ class Query extends db_connect
             AND t.STATUS != 'RETURNED'
             ORDER BY t.ID DESC
         ");
-        } else {
+        } elseif ($status == 'RETURNEDWITHDAMAGED') {
             $query = $this->conn->prepare("
-            SELECT t.*, s.NAME, acc.USERNAME 
+            SELECT 
+                t.*, 
+                s.NAME, 
+                acc.USERNAME,
+                CASE 
+                    WHEN SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 AND t.STATUS = 'RETURNED' THEN 
+                        CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
+                    ELSE t.STATUS
+                END AS STATUS
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
+            LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
+            WHERE (t.TRANSACTION_CODE LIKE ? 
+            OR s.student_code LIKE ? 
+            OR s.NAME LIKE ?)
+            AND t.STATUS = 'RETURNED'
+            AND EXISTS (
+                SELECT 1 
+                FROM `transaction_details` AS td_check
+                WHERE td_check.TRANS_CODE = t.TRANSACTION_CODE
+                AND td_check.DAMAGED_QTY > 0
+            )
+            GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
+            ORDER BY t.ID DESC
+        ");
+        } else {
+            $query = $this->conn->prepare("
+            SELECT 
+                t.*, 
+                s.NAME, 
+                acc.USERNAME,
+                CASE 
+                    WHEN t.STATUS = 'RETURNED' AND SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END) > 0 THEN 
+                        CONCAT(t.STATUS, ' with ', SUM(CASE WHEN td.DAMAGED_QTY > 0 THEN 1 ELSE 0 END), ' Item/s damaged')
+                    ELSE t.STATUS
+                END AS STATUS
+            FROM `transaction` AS t 
+            JOIN `students` AS s ON t.STUDENT_ID = s.ID 
+            JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
+            LEFT JOIN `transaction_details` AS td ON t.TRANSACTION_CODE = td.TRANS_CODE
             WHERE (t.TRANSACTION_CODE LIKE ? 
             OR s.student_code LIKE ? 
             OR s.NAME LIKE ?)
             AND t.STATUS = ?
+            GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
+        
         }
 
         if ($query) {
-            if ($status == 'ALL' || $status == 'OVERDUE') {
+            if ($status == 'ALL' || $status == 'OVERDUE' || $status == 'RETURNEDWITHDAMAGED') {
                 $query->bind_param('sss', $searchItem, $searchItem, $searchItem);
             } else {
                 $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $status);
