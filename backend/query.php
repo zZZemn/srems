@@ -403,6 +403,24 @@ class Query extends db_connect
         return $invRes['inv_count'];
     }
 
+    public function getInventoryUsingBarCode($code)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `inventory` WHERE `STATUS` = 'ACTIVE' AND `BARCODE` = ?");
+
+        if ($query) {
+            $query->bind_param('s', $code);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
     // Transaction
     public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue, $signature)

@@ -119,6 +119,18 @@ $categories = $query->getAll('categories');
             <form id="formTransactionAddItem">
                 <input type="hidden" name="REQUEST_TYPE" value="ADDSTUDENT">
                 <div class="modal-body">
+
+
+                    <div class="input-design1">
+                        <label for="barCode">Bar Code:</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control" name="barCode" id="barCode" placeholder="Input / Scan Bar Code" required>
+                            <button type="button" class="btn btn-dark ms-1" id="btnClearBarCode">Clear</button>
+                        </div>
+                    </div>
+
+                    <hr>
+
                     <div>
                         <label for="AddItemSelectCategory">Category</label>
                         <select name="category" id="AddItemSelectCategory" class="form-control">

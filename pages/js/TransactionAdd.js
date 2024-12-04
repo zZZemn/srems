@@ -219,6 +219,8 @@ $("#formTransactionAddItem").submit(function (e) {
     $("#hiddenItemName").val("");
     $("#hiddenItemId").val("");
     $("#hiddenItemQty").val("");
+
+    $("#barCode").val("");
   } else {
     AlertMessage("alert-danger", "Please select item in the list");
   }
@@ -270,6 +272,73 @@ $(document).on("click", ".btn-remove-item-in-list", function (e) {
   } else {
     console.log("Invalid index: " + index);
   }
+});
+
+// Scan Bar Code
+
+const searchBarCode = (code) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/inventory.php",
+    data: {
+      REQUEST_TYPE: "GETINVUSINGBARCODE",
+      BARCODE: code,
+    },
+    success: function (response) {
+      if (response != 400) {
+        console.log("Valid");
+        console.log(response);
+
+        const item = {
+          itemId: parseInt(response.ID),
+          itemName: response.ITEM_NAME,
+          itemQty: parseInt(response.REMAINING_QTY),
+          qty: 1,
+        };
+
+        if (itemsArray && itemsArray.length > 0) {
+          const index = itemsArray.findIndex(
+            (existingItem) => existingItem.itemId === item.itemId
+          );
+
+          if (index !== -1) {
+            itemsArray[index].qty += 1;
+          } else {
+            itemsArray.push(item);
+          }
+        } else {
+          itemsArray.push(item);
+        }
+
+        hideModal();
+
+        $("#AddItemSelectCategory").val("ALL");
+        loadItemSelectList("ALL");
+        $("#AddItemItemNameSelect").val("");
+
+        $("#hiddenItemName").val("");
+        $("#hiddenItemId").val("");
+        $("#hiddenItemQty").val("");
+
+        $("#barCode").val("");
+
+        loadItemsList();
+      } else {
+        console.log("Barcode Invalid");
+      }
+    },
+  });
+};
+
+$("#btnClearBarCode").click(function (e) {
+  e.preventDefault();
+
+  $("#barCode").val("");
+});
+
+$("#barCode").on("input", function (e) {
+  searchBarCode($(this).val());
+  $(this).val($(this).val());
 });
 
 // Add Item End

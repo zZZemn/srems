@@ -166,6 +166,49 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         header('Content-Type: application/json');
         echo json_encode($data);
+    } elseif ($reqType == "GETINVUSINGBARCODE") {
+        $barCode = $_GET['BARCODE'];
+
+        $result = $query->getInventoryUsingBarCode($barCode);
+
+        if ($result->num_rows > 0) {
+            $inv = $result->fetch_assoc();
+
+            $barrowedQty = 0;
+            $invId = $inv['ID'];
+            $invQty = $inv['QTY'];
+
+            $getTransactionDetailsUsingInvId = $query->getTransactionDetailsUsingInvId($invId);
+            if ($getTransactionDetailsUsingInvId->num_rows > 0) {
+                while ($transactionDetails = $getTransactionDetailsUsingInvId->fetch_assoc()) {
+                    $getTransactionDetails = $query->getTransactionUsingTransactionCode($transactionDetails['TRANS_CODE']);
+                    if ($getTransactionDetails->num_rows > 0) {
+                        $tDetails = $getTransactionDetails->fetch_assoc();
+
+                        if ($tDetails['STATUS'] != 'RETURNED') {
+                            $barrowedQty += $transactionDetails['QTY'];
+                        }
+                    }
+                }
+            }
+
+            $data = [
+                'ID' => $invId,
+                'BARCODE' => $inv['BARCODE'],
+                'INV_CODE' => $inv['INV_CODE'],
+                'ITEM_NAME' => $inv['ITEM_NAME'],
+                'QTY' => $invQty,
+                'REMAINING_QTY' => $invQty - $barrowedQty,
+                'CATEGORY' => $inv['CATEGORY'],
+                'IMG' => $inv['IMG'],
+                'STATUS' => $inv['STATUS']
+            ];
+
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } else {
+            echo 400;
+        }
     } else {
         echo 400;
     }
