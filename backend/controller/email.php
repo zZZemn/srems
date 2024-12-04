@@ -83,31 +83,68 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         sendEmail($_POST['email'], $_POST['name'], $messageBody);
     } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILRETURNED' && isset($_POST['name'], $_POST['dot'], $_POST['tId'], $_POST['email'])) {
+
+        // Extract and sanitize inputs
         $transactionId = htmlspecialchars($_POST['tId'], ENT_QUOTES, 'UTF-8');
         $dot = htmlspecialchars($_POST['dot'], ENT_QUOTES, 'UTF-8');
+        $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+        $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
 
+        // Decode and process the damagedList
+        $damagedList = json_decode($_POST['damagedList'], true);
+        $damagedItemsHtml = ""; // Initialize damaged items section
+
+        if (is_array($damagedList) && count($damagedList) > 0) {
+            $damagedItemsHtml .= "<br><br>The following items were returned:<br>";
+            $damagedItemsHtml .= "<table border='1' style='width: 100%; border-collapse: collapse;'>";
+            $damagedItemsHtml .= "<tr>
+            <th>ID</th>
+            <th>Item Name</th>
+            <th>Qty</th>
+            <th>Damaged Quantity</th>
+        </tr>";
+            foreach ($damagedList as $item) {
+                $id = htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8');
+                $itemName = htmlspecialchars($item['itemName'], ENT_QUOTES, 'UTF-8');
+                $currQty = htmlspecialchars($item['currQty'], ENT_QUOTES, 'UTF-8');
+                $qty = htmlspecialchars($item['value'], ENT_QUOTES, 'UTF-8');
+                $damagedItemsHtml .= "<tr>
+                <td>{$id}</td>
+                <td>{$itemName}</td>
+                <td>{$currQty}</td>
+                <td>{$qty}</td>
+            </tr>";
+            }
+            $damagedItemsHtml .= "</table>";
+        }
+
+        // Generate the email message body
         $messageBody = "
-        Dear " . htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') . ",
-        <br>
-        <br>
-        We are pleased to inform you that you have successfully returned the items borrowed from the laboratory.
-        <br>
-        <br>
-        The date of this transaction is: <strong>{$dot}</strong>.
-        <br>
-        Your transaction code is: <strong>{$transactionId}</strong>.
-        <br>
-        <br>
-        If you have any questions or need further assistance, feel free to reach out to us.
-        <br>
-        Thank you for your cooperation.
-        <br>
-        <br>
-        Best regards,
-        <br>
-        Srems HM Department";
+    Dear {$name},
+    <br>
+    <br>
+    We are pleased to inform you that you have successfully returned the items borrowed from the laboratory.
+    <br>
+    <br>
+    The date of this transaction is: <strong>{$dot}</strong>.
+    <br>
+    Your transaction code is: <strong>{$transactionId}</strong>.
+    {$damagedItemsHtml}
+    <br>
+    <br>
+    If you have any questions or need further assistance, feel free to reach out to us.
+    <br>
+    Thank you for your cooperation.
+    <br>
+    <br>
+    Best regards,
+    <br>
+    Srems HM Department";
 
-        sendEmail($_POST['email'], $_POST['name'], $messageBody);
+        // Send the email
+        sendEmail($email, $name, $messageBody);
+
+
     } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILOVERDUE') {
         $getOD = $query->getTransctionsWSearch('OVERDUE', '');
 

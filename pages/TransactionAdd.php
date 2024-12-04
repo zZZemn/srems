@@ -124,7 +124,7 @@ $categories = $query->getAll('categories');
                     <div class="input-design1">
                         <label for="barCode">Bar Code:</label>
                         <div class="d-flex">
-                            <input type="text" class="form-control" name="barCode" id="barCode" placeholder="Input / Scan Bar Code" required>
+                            <input type="text" class="form-control" name="barCode" id="barCode" placeholder="Input / Scan Bar Code">
                             <button type="button" class="btn btn-dark ms-1" id="btnClearBarCode">Clear</button>
                         </div>
                     </div>

@@ -96,13 +96,42 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 $remarks = $_POST['rtnRemarks'];
 
                 $query->updateRemarksAndReturnedImage($id, $img, $remarks);
+
+                if (isset($_POST['damage_qty'])) {
+                    foreach ($_POST['damage_qty'] as $iid => $details) {
+                        $itemName = $details['item_name'];
+                        $qty = $details['qty'];
+
+                        $query->updateTdDamagedQty($iid, $qty);
+                    }
+                }
+
                 echo $query->changeStatus('transaction', $id, 'RETURNED');
                 exit;
             } else {
+
+                if (isset($_POST['damage_qty'])) {
+                    foreach ($_POST['damage_qty'] as $iid => $details) {
+                        $itemName = $details['item_name'];
+                        $qty = $details['qty'];
+
+                        $query->updateTdDamagedQty($iid, $qty);
+                    }
+                }
+
                 echo $query->changeStatus('transaction', $id, 'RETURNED');
                 exit;
             }
         } else {
+
+            if (isset($_POST['damage_qty'])) {
+                foreach ($_POST['damage_qty'] as $iid => $details) {
+                    $itemName = $details['item_name'];
+                    $qty = $details['qty'];
+
+                    $query->updateTdDamagedQty($iid, $qty);
+                }
+            }
 
             echo $query->changeStatus('transaction', $id, 'RETURNED');
             exit;

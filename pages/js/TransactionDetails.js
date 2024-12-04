@@ -1,4 +1,4 @@
-const sendEmail = (email, name, dot, tId) => {
+const sendEmail = (email, name, dot, tId, damagedList) => {
   $.ajax({
     type: "POST",
     url: "../backend/controller/email.php",
@@ -8,6 +8,7 @@ const sendEmail = (email, name, dot, tId) => {
       name: name,
       dot: dot,
       tId: tId,
+      damagedList: JSON.stringify(damagedList),
     },
     success: function (response) {
       console.log(response);
@@ -26,10 +27,32 @@ $("#btnReturnTransaction").click(function (e) {
 $("#formReturnTransaction").submit(function (e) {
   e.preventDefault();
 
+  var damagedList = [];
+
   $("#btnReturnTransaction").attr("disabled", true);
 
-  // var formData = $(this).serialize();
   var formData = new FormData(this);
+
+  $(".input-damage-qty").each(function () {
+    var id = $(this).data("id");
+    var itemName = $(this).data("itemname");
+    var value = $(this).val();
+    var currQty = $(this).data("curqty");
+
+    var obj = {
+      id: id,
+      itemName: itemName,
+      value: value,
+      currQty: currQty,
+    };
+
+    damagedList.push(obj);
+
+    formData.append(`damage_qty[${id}][item_name]`, itemName);
+    formData.append(`damage_qty[${id}][qty]`, value);
+  });
+
+  console.log(damagedList);
 
   $.ajax({
     url: "../backend/controller/transaction.php",
@@ -48,7 +71,8 @@ $("#formReturnTransaction").submit(function (e) {
           $("#sdEmail").text(),
           $("#sdName").text(),
           $("#tdDOT").text(),
-          $("#txtHiddenTCode").val()
+          $("#txtHiddenTCode").val(),
+          damagedList
         );
       } else {
         AlertMessage("alert-danger", "Failed to complete transction!");

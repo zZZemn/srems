@@ -87,8 +87,8 @@ if (isset($_GET['tId'])) {
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Available Qty</th>
                         <th>Qty</th>
+                        <th>Damage Qty</th>
                     </tr>
                 </thead>
                 <tbody id="transaction-item-tbody">
@@ -100,8 +100,22 @@ if (isset($_GET['tId'])) {
                         <tr>
                             <td><?= $td['ID'] ?></td>
                             <td><?= $inv['ITEM_NAME'] ?></td>
-                            <td><?= $inv['QTY'] ?></td>
                             <td><?= $td['QTY'] ?></td>
+                            <td>
+                                <input
+                                    class="form-control input-damage-qty"
+                                    data-id="<?= $td['ID'] ?>"
+                                    data-itemname="<?= $inv['ITEM_NAME'] ?>"
+                                    data-curqty="<?= $td['QTY'] ?>"
+                                    style="width: 100px;"
+                                    type="number"
+                                    max="<?= $td['QTY'] ?>"
+                                    min="0"
+                                    value="<?= $td['DAMAGED_QTY'] ?>"
+                                    <?php
+                                    echo ($status == "RETURNED") ? 'disabled' : ''
+                                    ?> />
+                            </td>
                         </tr>
                     <?php
                     }

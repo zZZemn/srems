@@ -101,7 +101,7 @@ const loadItemSelectList = (category) => {
         $("#AddItemItemNameSelect").append('<option value=""></option>');
 
         response.forEach(function (item) {
-          let option = `<option value="${item.ID}" data-qty="${item.QTY}">${item.ITEM_NAME}</option>`;
+          let option = `<option value="${item.ID}" data-qty="${item.REMAINING_QTY}">${item.ITEM_NAME}</option>`;
           $("#AddItemItemNameSelect").append(option);
         });
       }

@@ -137,6 +137,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
             $invId = $inv['ID'];
             $invQty = $inv['QTY'];
 
+            $damagedQty = 0;
+
             $getTransactionDetailsUsingInvId = $query->getTransactionDetailsUsingInvId($invId);
             if ($getTransactionDetailsUsingInvId->num_rows > 0) {
                 while ($transactionDetails = $getTransactionDetailsUsingInvId->fetch_assoc()) {
@@ -147,9 +149,15 @@ if (isset($_POST['REQUEST_TYPE'])) {
                         if ($tDetails['STATUS'] != 'RETURNED') {
                             $barrowedQty += $transactionDetails['QTY'];
                         }
+
+                        if ($transactionDetails['DAMAGED_QTY'] > 0) {
+                            $damagedQty += $transactionDetails['DAMAGED_QTY'];
+                        }
                     }
                 }
             }
+
+            $totalInvDeduction = $barrowedQty + $damagedQty;
 
             $data[] = [
                 'ID' => $invId,
@@ -157,7 +165,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 'INV_CODE' => $inv['INV_CODE'],
                 'ITEM_NAME' => $inv['ITEM_NAME'],
                 'QTY' => $invQty,
-                'REMAINING_QTY' => $invQty - $barrowedQty,
+                'REMAINING_QTY' => $invQty - $totalInvDeduction,
                 'CATEGORY' => $inv['CATEGORY'],
                 'IMG' => $inv['IMG'],
                 'STATUS' => $inv['STATUS']
@@ -178,6 +186,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
             $invId = $inv['ID'];
             $invQty = $inv['QTY'];
 
+            $damagedQty = 0;
+
             $getTransactionDetailsUsingInvId = $query->getTransactionDetailsUsingInvId($invId);
             if ($getTransactionDetailsUsingInvId->num_rows > 0) {
                 while ($transactionDetails = $getTransactionDetailsUsingInvId->fetch_assoc()) {
@@ -188,9 +198,15 @@ if (isset($_POST['REQUEST_TYPE'])) {
                         if ($tDetails['STATUS'] != 'RETURNED') {
                             $barrowedQty += $transactionDetails['QTY'];
                         }
+
+                        if ($transactionDetails['DAMAGED_QTY'] > 0) {
+                            $damagedQty += $transactionDetails['DAMAGED_QTY'];
+                        }
                     }
                 }
             }
+
+            $totalInvDeduction = $barrowedQty + $damagedQty;
 
             $data = [
                 'ID' => $invId,
@@ -198,7 +214,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 'INV_CODE' => $inv['INV_CODE'],
                 'ITEM_NAME' => $inv['ITEM_NAME'],
                 'QTY' => $invQty,
-                'REMAINING_QTY' => $invQty - $barrowedQty,
+                'REMAINING_QTY' => $invQty - $totalInvDeduction,
                 'CATEGORY' => $inv['CATEGORY'],
                 'IMG' => $inv['IMG'],
                 'STATUS' => $inv['STATUS']

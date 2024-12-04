@@ -664,6 +664,22 @@ class Query extends db_connect
         }
     }
 
+    public function updateTdDamagedQty($id, $damageQty)
+    {
+        $query = $this->conn->prepare("UPDATE `transaction_details` SET `DAMAGED_QTY`= ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param('ii', $damageQty, $id);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 
 
     // Teachers
