@@ -34,6 +34,8 @@ const sendEmail = (email, name, dueDate) => {
 };
 
 const searchStudentCode = (studCode) => {
+  $("#studentCode").val(studCode);
+
   $.ajax({
     url: "../backend/controller/student.php",
     type: "GET",
@@ -116,16 +118,10 @@ $("#btnClearStudCode").click(function (e) {
 });
 
 $("#studentCode").on("keydown", function (e) {
-  e.preventDefault();
-
   let value = $("#studentCode").val();
 
   if (e.key === "Enter") {
     searchStudentCode(value);
-  
-    setTimeout(() => {
-      $("#studentCode").val(value);
-    }, 1000);
   }
 });
 
