@@ -115,9 +115,26 @@ $("#btnClearStudCode").click(function (e) {
   $("#studentCode").val("");
 });
 
+$("#studentCode").on("keydown", function (e) {
+  e.preventDefault();
+
+  let value = $("#studentCode").val();
+
+  if (e.key === "Enter") {
+    searchStudentCode(value);
+  
+    setTimeout(() => {
+      $("#studentCode").val(value);
+    }, 1000);
+  }
+});
+
 $("#studentCode").on("input", function (e) {
-  searchStudentCode($(this).val());
-  $(this).val($(this).val());
+  e.preventDefault();
+
+  let value = $("#studentCode").val();
+
+  searchStudentCode(value);
 });
 
 // Add Item

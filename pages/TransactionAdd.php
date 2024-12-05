@@ -16,7 +16,7 @@ $categories = $query->getAll('categories');
         <label for="studentCode">Student Code:</label>
         <div class="d-flex">
             <input type="text" class="form-control" name="studentCode" id="studentCode" placeholder="Input / Scan Student Code" required>
-            <button class="btn btn-dark ms-1" id="btnClearStudCode">Clear</button>
+            <button type="button" class="btn btn-dark ms-1" id="btnClearStudCode">Clear</button>
         </div>
     </div>
     <div class="container card mt-2 p-3">
