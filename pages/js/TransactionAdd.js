@@ -194,6 +194,11 @@ $("#formTransactionAddItem").submit(function (e) {
   const itemId = $("#hiddenItemId").val();
   const itemQty = $("#hiddenItemQty").val();
 
+  if (itemQty < 1) {
+    AlertMessage("alert-danger", "This item is out of stock");
+    return;
+  }
+
   if (
     itemId != null &&
     !isNaN(itemId) &&
@@ -215,6 +220,12 @@ $("#formTransactionAddItem").submit(function (e) {
       );
 
       if (index !== -1) {
+        var currentQty = itemsArray[index].qty;
+        if ((currentQty += 1) > item.itemQty) {
+          AlertMessage("alert-danger", "This item have reached its maximum quantity");
+          return;
+        }
+
         itemsArray[index].qty += 1;
       } else {
         itemsArray.push(item);
@@ -309,12 +320,23 @@ const searchBarCode = (code) => {
           qty: 1,
         };
 
+        if (item.itemQty < 1) {
+          AlertMessage("alert-danger", "This item is out of stock");
+          return;
+        }
+
         if (itemsArray && itemsArray.length > 0) {
           const index = itemsArray.findIndex(
             (existingItem) => existingItem.itemId === item.itemId
           );
 
           if (index !== -1) {
+            var currentQty = itemsArray[index].qty;
+            if ((currentQty += 1) > item.itemQty) {
+              AlertMessage("alert-danger", "This item have reached its maximum quantity");
+              return;
+            }
+
             itemsArray[index].qty += 1;
           } else {
             itemsArray.push(item);
