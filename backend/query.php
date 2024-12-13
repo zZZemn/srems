@@ -660,7 +660,32 @@ class Query extends db_connect
         return $transactionRes['transaction_count'];
     }
 
+    public function getStudentTransactionToday($studCode)
+    {
+        $query = $this->conn->prepare("
+        SELECT * 
+        FROM `transaction` AS t
+        JOIN `students` AS s
+          ON t.STUDENT_ID = s.ID
+        WHERE s.STUDENT_CODE = ?
+          
+        ");
 
+        // AND t.DATE = CURDATE()
+        if ($query) {
+
+            $query->bind_param('s', $studCode);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 
 
     // Transaction details

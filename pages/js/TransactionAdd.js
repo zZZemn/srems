@@ -33,6 +33,21 @@ const sendEmail = (email, name, dueDate) => {
   });
 };
 
+const checkStudentTransactionToday = (studCode, callback) => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/transaction.php",
+    data: {
+      REQUEST_TYPE: "GETSTUDENTTRANSACTIONTODAY",
+      STUDENT_CODE: studCode,
+    },
+    success: function (response) {
+      const hasTransactionToday = response == 1;
+      callback(hasTransactionToday);
+    },
+  });
+};
+
 const searchStudentCode = (studCode) => {
   $("#studentCode").val(studCode);
 
@@ -48,9 +63,18 @@ const searchStudentCode = (studCode) => {
 
       if (response != 400) {
         if (response.STATUS == "ACTIVE") {
-          $("#sdName").text(response.NAME);
-          $("#sdEmail").text(response.EMAIL);
-          $("#sdContactNo").text(response.CONTACT_NO);
+          checkStudentTransactionToday(studCode, (hasTransactionToday) => {
+            if (hasTransactionToday) {
+              AlertMessage(
+                "alert-danger",
+                "This student already has a transaction today"
+              );
+            } else {
+              $("#sdName").text(response.NAME);
+              $("#sdEmail").text(response.EMAIL);
+              $("#sdContactNo").text(response.CONTACT_NO);
+            }
+          });
         }
       } else {
         $("#sdName").text("");
@@ -222,7 +246,10 @@ $("#formTransactionAddItem").submit(function (e) {
       if (index !== -1) {
         var currentQty = itemsArray[index].qty;
         if ((currentQty += 1) > item.itemQty) {
-          AlertMessage("alert-danger", "This item have reached its maximum quantity");
+          AlertMessage(
+            "alert-danger",
+            "This item have reached its maximum quantity"
+          );
           return;
         }
 
@@ -333,7 +360,10 @@ const searchBarCode = (code) => {
           if (index !== -1) {
             var currentQty = itemsArray[index].qty;
             if ((currentQty += 1) > item.itemQty) {
-              AlertMessage("alert-danger", "This item have reached its maximum quantity");
+              AlertMessage(
+                "alert-danger",
+                "This item have reached its maximum quantity"
+              );
               return;
             }
 
@@ -383,7 +413,6 @@ $("#frmTransactionAdd").submit(function (e) {
 
   var isInvalidCode = false;
   var isInvalidDate = false;
-
   var isInvalidSubmit = false;
 
   const studCode = $("#studentCode").val();
@@ -407,83 +436,93 @@ $("#frmTransactionAdd").submit(function (e) {
   var base64ImageSignature = $("#drawPad canvas").get(0).toDataURL();
   $("#base64ImagePreview").attr("src", base64ImageSignature);
 
-  $.ajax({
-    url: "../backend/controller/student.php",
-    type: "GET",
-    data: {
-      REQUEST_TYPE: "GETSTUDENTUSINGCODE",
-      STUDENT_CODE: studCode,
-    },
-    success: function (response) {
-      barrowedInfo = response;
-      console.log(response);
-      console.log("test code: " + response);
-      if (response == 400) {
-        isInvalidCode = true;
-        AlertMessage("alert-danger", "Invalid student code");
-        return;
-      } else {
-        isInvalidCode = false;
-      }
-    },
-    error: function (xhr, status, error) {
-      console.log("Form submission failed:", status, error);
-    },
-  });
+  checkStudentTransactionToday(studCode, function (hasTransactionToday) {
+    if (hasTransactionToday) {
+      isInvalidCode = true;
+      AlertMessage(
+        "alert-danger",
+        "This student already has a transaction today"
+      );
+      return;
+    }
 
-  if (selectedDate < minDate) {
-    isInvalidDate = true;
-    AlertMessage("alert-danger", "Invalid due date");
-    return;
-  }
+    if (selectedDate < minDate) {
+      isInvalidDate = true;
+      AlertMessage("alert-danger", "Invalid due date");
+      return;
+    }
 
-  if (teacher == "" || teacher == null) {
-    isInvalidSubmit = true;
-    AlertMessage("alert-danger", "Invalid teacher");
-    return;
-  }
+    if (!teacher) {
+      isInvalidSubmit = true;
+      AlertMessage("alert-danger", "Invalid teacher");
+      return;
+    }
 
-  if (venue == "" || venue == null) {
-    isInvalidSubmit = true;
-    AlertMessage("alert-danger", "Invalid venue");
-    return;
-  }
-
-  if (!isInvalidCode && !isInvalidDate && !isInvalidSubmit) {
-    $("#BtnSaveTransaction").attr("disabled", true);
+    if (!venue) {
+      isInvalidSubmit = true;
+      AlertMessage("alert-danger", "Invalid venue");
+      return;
+    }
 
     $.ajax({
-      type: "POST",
-      url: "../backend/controller/transaction.php",
+      url: "../backend/controller/student.php",
+      type: "GET",
       data: {
-        REQUEST_TYPE: "INSERTNEWTRANSACTION",
+        REQUEST_TYPE: "GETSTUDENTUSINGCODE",
         STUDENT_CODE: studCode,
-        DUE_DATE: dueDate,
-        TEACHER: teacher,
-        VENUE: venue,
-        SIGNATURE: base64ImageSignature,
-        ITEMS: JSON.stringify(itemsArray),
       },
       success: function (response) {
-        console.log(response);
-        if (response == 200) {
-          AlertMessage("alert-success", "Transaction added!");
-
-          try {
-            sendEmail(barrowedInfo.EMAIL, barrowedInfo.NAME, dueDate);
-          } catch (e) {
-            console.error("An error occurred while sending the email:", e);
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }
-        } else {
-          AlertMessage("alert-danger", "Something went wrong!");
+        if (response == 400) {
+          isInvalidCode = true;
+          AlertMessage("alert-danger", "Invalid student code");
           return;
         }
+
+        if (!isInvalidCode && !isInvalidDate && !isInvalidSubmit) {
+          $("#BtnSaveTransaction").attr("disabled", true);
+
+          $.ajax({
+            type: "POST",
+            url: "../backend/controller/transaction.php",
+            data: {
+              REQUEST_TYPE: "INSERTNEWTRANSACTION",
+              STUDENT_CODE: studCode,
+              DUE_DATE: dueDate,
+              TEACHER: teacher,
+              VENUE: venue,
+              SIGNATURE: base64ImageSignature,
+              ITEMS: JSON.stringify(itemsArray),
+            },
+            success: function (response) {
+              if (response == 200) {
+                AlertMessage("alert-success", "Transaction added!");
+
+                try {
+                  sendEmail(barrowedInfo.EMAIL, barrowedInfo.NAME, dueDate);
+                } catch (e) {
+                  console.error(
+                    "An error occurred while sending the email:",
+                    e
+                  );
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1000);
+                }
+              } else {
+                AlertMessage("alert-danger", "Something went wrong!");
+              }
+            },
+          });
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching student info:", error);
+        AlertMessage("alert-danger", "Something went wrong!");
       },
     });
-  }
+  });
+
+
 });
 
 loadAddItemModalContents();

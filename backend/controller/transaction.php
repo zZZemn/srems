@@ -155,5 +155,16 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
         header('Content-Type: application/json');
         echo json_encode($data);
+    } elseif ($reqType == 'GETSTUDENTTRANSACTIONTODAY') {
+        $studCode = $_GET['STUDENT_CODE'];
+
+        $checkTransactionToday = $query->getStudentTransactionToday($studCode);
+
+        if ($checkTransactionToday->num_rows > 0) {
+            echo 1;
+            exit;
+        }
+
+        echo 0;
     }
 }
