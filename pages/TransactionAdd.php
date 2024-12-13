@@ -4,6 +4,7 @@ include("components/header.php");
 
 $teachers = $query->getAll('teachers');
 $categories = $query->getAll('categories');
+$venues = $query->getAll('venues');
 
 ?>
 <div class="d-flex justify-content-between align-items-center">
@@ -83,8 +84,16 @@ $categories = $query->getAll('categories');
             <h6>Venue:</h6>
         </div>
 
-        <input type="text" class="form-control" required id="venue" name="venue">
-
+        <select class="form-control" required id="venue" name="venue">
+            <option value=""></option>
+            <?php
+            foreach ($venues as $venue) {
+            ?>
+                <option value="<?= $venue['NAME'] ?>"><?= $venue['NAME'] ?></option>
+            <?php
+            }
+            ?>
+        </select>
     </div>
 
 

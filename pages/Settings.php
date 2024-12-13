@@ -84,6 +84,36 @@ include("components/header.php");
 </div>
 
 
+<div class="card p-3 mt-3">
+
+    <h6 style="font-style: italic;">Venues</h6>
+
+    <form class="d-flex justify-content-end" id="formAddVenue">
+        <input type="hidden" name="REQUEST_TYPE" value="ADDVENUE">
+        <div class="input-group input-group-sm w-25">
+            <label for="v-name" class="input-group-text">Name</label>
+            <input type="text" name="name" id="v-name" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary ms-1">Add</button>
+    </form>
+
+    <div class="" style="height: 100px; overflow-y:auto">
+        <table class="table table-sm">
+            <thead style="position: sticky; top: 0;">
+                <tr>
+                    <th>ID</th>
+                    <th>Venue Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="venuesTableBody">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
 <?php include("components/footer.php") ?>
 <script src="js/Settings.js"></script>
 </body>

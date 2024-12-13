@@ -207,3 +207,110 @@ $(document).on("click", ".btn-delete-category", function (e) {
 });
 
 loadCategory();
+
+//
+
+const loadVenue = () => {
+  $.ajax({
+    type: "GET",
+    url: "../backend/controller/venue.php",
+    data: {
+      REQUEST_TYPE: "GETVENUES",
+    },
+    success: function (response) {
+      console.log(response);
+
+      const $tableBody = $("#venuesTableBody");
+
+      $tableBody.empty();
+
+      if (response.length > 0) {
+        $.each(response, function (index, venue) {
+          const $row = $("<tr>");
+
+          $row.append($("<td>").text(venue.ID));
+          $row.append($("<td>").text(venue.NAME));
+
+          const $actionTd = $("<td>");
+          const $deleteButton = $("<button>")
+            .addClass("btn-delete-venue btn btn-danger btn-sm")
+            .text("Delete")
+            .css("font-size", "12px")
+            .attr("data-id", venue.ID);
+
+          $actionTd.append($deleteButton);
+          $row.append($actionTd);
+
+          $tableBody.append($row);
+        });
+      } else {
+        const $noDataRow = $("<tr>").append(
+          $("<td>")
+            .attr("colspan", 3)
+            .addClass("text-center")
+            .text("No Data Found!")
+        );
+        $tableBody.append($noDataRow);
+      }
+    },
+  });
+};
+
+$("#formAddVenue").submit(function (e) {
+  e.preventDefault();
+
+  var formData = $(this).serialize();
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/venue.php",
+    data: formData,
+    success: function (response) {
+      console.log(response);
+
+      if (response == "200") {
+        AlertMessage("alert-success", "Venue Added!");
+        $("#formAddVenue")[0].reset();
+
+        loadVenue();
+      } else {
+        AlertMessage("alert-danger", "Failed to Add!");
+      }
+    },
+  });
+});
+
+$(document).on("click", ".btn-delete-venue", function (e) {
+  e.preventDefault();
+
+  var id = $(this).data("id");
+
+  const confirmation = confirm(
+    "Are you sure you want to delete this venue?"
+  );
+
+  if (!confirmation) {
+    return;
+  }
+
+  $.ajax({
+    type: "POST",
+    url: "../backend/controller/venue.php",
+    data: {
+      REQUEST_TYPE: "DELETEVENUE",
+      ID: id,
+    },
+    success: function (response) {
+      console.log(response);
+
+      if (response == "200") {
+        AlertMessage("alert-success", "Venue Deleted!");
+        loadVenue();
+      } else {
+        AlertMessage("alert-danger", "Failed to Delete!");
+      }
+    },
+  });
+});
+
+loadVenue();

@@ -858,4 +858,23 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+
+    // Venues
+    public function insertVenue($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `venues` (`NAME`) VALUES (?)");
+
+        if ($query) {
+            $query->bind_param('s', $post['name']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 }
