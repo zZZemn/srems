@@ -37,9 +37,66 @@ if (isset($_GET['tId'])) {
     exit;
 }
 ?>
-<div class="d-flex justify-content-between align-items-center">
+
+<style>
+    @media print {
+        #main-container {
+            left: 0 !important;
+            top: 0 !important;
+            padding: 10px !important;
+            width: 100% !important;
+        }
+
+        .print-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+        }
+
+        * {
+            font-size: 12px !important;
+        }
+
+        #SignatureImage {
+            height: 150px !important;
+            width: 150px !important;
+        }
+
+        .input-damage-qty {
+            border: none;
+            background-color: transparent;
+            color: black;
+            box-shadow: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .input-damage-qty:focus {
+            outline: none;
+        }
+
+        .input-damage-qty::-webkit-outer-spin-button,
+        .input-damage-qty::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .input-damage-qty[type="number"] {
+            -moz-appearance: textfield;
+        }
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center d-print-none">
     <h4 class="text-primary">Transaction Details</h4>
     <div>
+        <button class="btn btn-sm btn-dark" id="btn-print">Print</button>
         <a href="Transaction.php" class="btn btn-sm btn-dark">Back to List</a>
         <?php
         if ($status != "RETURNED") {
@@ -49,7 +106,7 @@ if (isset($_GET['tId'])) {
     </div>
 </div>
 
-<div class="container p-3" id="">
+<div class="print-container container p-3" id="">
     <div class="container card p-3">
         <div class="d-flex justify-content-between align-items-center">
             <h6><i class="bi bi-info-circle"></i> Transction Information:</h6>
@@ -127,7 +184,7 @@ if (isset($_GET['tId'])) {
                                 <?php
                                 if ($status == "RETURNED" && $td['DAMAGED_QTY'] > 0 && $td['DAMAGED_QTY'] > $replacedItemQty) {
                                 ?>
-                                    <button class="btn btn-sm btn-primary ms-2 btn-replace"
+                                    <button class="btn btn-sm btn-primary ms-2 btn-replace d-print-none"
                                         data-tdid="<?= $td['ID'] ?>"
                                         data-dmgqty="<?= $td['DAMAGED_QTY'] ?>"
                                         data-replacedqty="<?= $replacedItemQty ?>">Replace</button>

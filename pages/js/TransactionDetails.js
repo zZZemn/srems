@@ -135,3 +135,9 @@ $("#formReplaceItems").submit(function (e) {
     },
   });
 });
+
+$("#btn-print").click(function(e) {
+  e.preventDefault();
+
+  window.print();
+});
