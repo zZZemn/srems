@@ -466,9 +466,10 @@ class Query extends db_connect
     }
 
 
-    public function getTransctionsWSearch($status, $search)
+    public function getTransctionsWSearch($status, $search, $month)
     {
         $searchItem = '%' . $search . '%';
+        $monthCondition = ($month !== 'ALL') ? "AND MONTH(t.DATE) = ?" : ""; // Use t.DATE for the month filter
 
         if ($status == 'ALL') {
             $query = $this->conn->prepare("
@@ -495,6 +496,7 @@ class Query extends db_connect
                 (t.TRANSACTION_CODE LIKE ? 
                 OR s.student_code LIKE ? 
                 OR s.NAME LIKE ?)
+                $monthCondition
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
@@ -504,11 +506,13 @@ class Query extends db_connect
             FROM `transaction` AS t 
             JOIN `students` AS s ON t.STUDENT_ID = s.ID 
             JOIN `account` AS acc ON t.CUSTODIAN_ID = acc.ID 
-            WHERE (t.TRANSACTION_CODE LIKE ? 
-            OR s.student_code LIKE ? 
-            OR s.NAME LIKE ?)
-            AND t.DUEDATE < CURDATE()
-            AND t.STATUS != 'RETURNED'
+            WHERE 
+                (t.TRANSACTION_CODE LIKE ? 
+                OR s.student_code LIKE ? 
+                OR s.NAME LIKE ?)
+                AND t.DUEDATE < CURDATE()
+                AND t.STATUS != 'RETURNED'
+                $monthCondition
             ORDER BY t.ID DESC
         ");
         } elseif ($status == 'RETURNEDWITHDAMAGED') {
@@ -547,6 +551,7 @@ class Query extends db_connect
                     WHERE td_check.TRANS_CODE = t.TRANSACTION_CODE
                     AND td_check.DAMAGED_QTY > 0
                 )
+                $monthCondition
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
@@ -580,16 +585,25 @@ class Query extends db_connect
                 OR s.student_code LIKE ? 
                 OR s.NAME LIKE ?)
                 AND t.STATUS = ?
+                $monthCondition
             GROUP BY t.ID, s.NAME, acc.USERNAME, t.STATUS
             ORDER BY t.ID DESC
         ");
         }
 
         if ($query) {
-            if ($status == 'ALL' || $status == 'OVERDUE' || $status == 'RETURNEDWITHDAMAGED') {
-                $query->bind_param('sss', $searchItem, $searchItem, $searchItem);
+            if ($month !== 'ALL') {
+                if ($status == 'ALL' || $status == 'OVERDUE' || $status == 'RETURNEDWITHDAMAGED') {
+                    $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $month);
+                } else {
+                    $query->bind_param('sssss', $searchItem, $searchItem, $searchItem, $status, $month);
+                }
             } else {
-                $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $status);
+                if ($status == 'ALL' || $status == 'OVERDUE' || $status == 'RETURNEDWITHDAMAGED') {
+                    $query->bind_param('sss', $searchItem, $searchItem, $searchItem);
+                } else {
+                    $query->bind_param('ssss', $searchItem, $searchItem, $searchItem, $status);
+                }
             }
 
             if ($query->execute()) {
@@ -602,6 +616,7 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
 
     public function getBINumbersPerMonth()
     {

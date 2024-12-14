@@ -145,8 +145,9 @@ if (isset($_POST['REQUEST_TYPE'])) {
     if ($reqType == 'GETTRANSACTIONS') {
         $search = $_GET['search'];
         $status = $_GET['status'];
+        $month = $_GET['month'];
 
-        $result = $query->getTransctionsWSearch($status, $search);
+        $result = $query->getTransctionsWSearch($status, $search, $month);
 
         $data = [];
         while ($row = $result->fetch_assoc()) {

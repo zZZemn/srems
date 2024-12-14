@@ -22,7 +22,7 @@ $("#btnSendEmail").click(function (e) {
   sendEmail();
 });
 
-const loadTransaction = (search, status) => {
+const loadTransaction = (search, status, month) => {
   $.ajax({
     type: "GET",
     url: "../backend/controller/transaction.php",
@@ -30,6 +30,7 @@ const loadTransaction = (search, status) => {
       REQUEST_TYPE: "GETTRANSACTIONS",
       search: search,
       status: status,
+      month: month,
     },
     success: function (response) {
       console.log(response);
@@ -97,15 +98,28 @@ $("#selectStatus").change(function (e) {
   e.preventDefault();
   const search = $("#inputSearch").val();
   const status = $("#selectStatus").val();
+  const month = $("#selectDate").val();
 
-  loadTransaction(search, status);
+  loadTransaction(search, status, month);
+});
+
+$("#selectDate").change(function (e) {
+  e.preventDefault();
+
+  e.preventDefault();
+  const search = $("#inputSearch").val();
+  const status = $("#selectStatus").val();
+  const month = $("#selectDate").val();
+
+  loadTransaction(search, status, month);
 });
 
 $("#inputSearch").on("input", function (e) {
   const search = $("#inputSearch").val();
   const status = $("#selectStatus").val();
+  const month = $("#selectDate").val();
 
-  loadTransaction(search, status);
+  loadTransaction(search, status, month);
 });
 
-loadTransaction("", "ALL");
+loadTransaction("", "ALL", "ALL");

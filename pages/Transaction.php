@@ -16,6 +16,23 @@ $getTransaction = $query->getAll('transaction');
         <option value="RETURNED">Returned</option>
         <option value="RETURNEDWITHDAMAGED">Returned with Damage</option>
     </select>
+
+    <select name="date" id="selectDate" class="form-control ms-1" style="width: 120px;">
+        <option value="ALL">All Months</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
+
     <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
 </div>
 <table class="table table-striped" style="font-size: 12px;">
