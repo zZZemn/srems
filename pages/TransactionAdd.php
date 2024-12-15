@@ -105,10 +105,11 @@ $venues = $query->getAll('venues');
         <div id="drawPad" class="drawpad-dashed" style="height: 300px; width: 300px"></div>
         <input type='hidden' id='outputBase64FormInput' name='mybase64image'>
 
+        <button type="button" id="btnClearSignature" class="btn btn-sm btn-primary mt-2" style="width: 70px;">Clear</button>
 
         <hr>
 
-        <img id="base64ImagePreview" alt="Signature Image Preview" />
+        <img id="base64ImagePreview" alt="Signature Image Preview" style="height: 300px; width: 300px" />
     </div>
 
 
