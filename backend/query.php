@@ -421,6 +421,37 @@ class Query extends db_connect
         }
     }
 
+    public function getInvAvailableQty($invId)
+    {
+        $query = $this->conn->prepare("SELECT 
+        inv.QTY AS ActualInventoryQty,
+        COALESCE(SUM(td.QTY), 0) AS TotalTransactionQty,
+        (inv.QTY - COALESCE(SUM(td.QTY), 0)) AS RemainingQty
+        FROM 
+            inventory AS inv
+        LEFT JOIN 
+            transaction_details AS td 
+        ON 
+            inv.ID = td.INV_ID
+        WHERE 
+            inv.ID = ?
+        GROUP BY 
+            inv.ID, inv.QTY;");
+
+        if ($query) {
+            $query->bind_param('i', $invId);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
 
     // Transaction
     public function insertTransaction($code, $uId, $sId, $date, $dueDate, $teacher, $venue, $signature)
@@ -685,7 +716,7 @@ class Query extends db_connect
         WHERE s.STUDENT_CODE = ?
         AND DATE(t.DATE) = CURDATE()
     ");
-        
+
         if ($query) {
 
             $query->bind_param('s', $studCode);
@@ -786,6 +817,23 @@ class Query extends db_connect
 
         if ($query) {
             $query->bind_param('ii', $damageQty, $id);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+    public function editTransactionDetilsQty($post)
+    {
+        $query = $this->conn->prepare("UPDATE `transaction_details` SET `QTY`= ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param('ii', $post['qty'], $post['inv_id']);
 
             if ($query->execute()) {
                 return 200;

@@ -138,6 +138,8 @@ if (isset($_POST['REQUEST_TYPE'])) {
         }
     } elseif ($reqType == "REPLACEITEMS") {
         echo $query->replaceItem($_POST);
+    } elseif ($reqType == "EDITQTY") {
+        echo $query->editTransactionDetilsQty($_POST);
     }
 } elseif (isset($_GET['REQUEST_TYPE'])) {
     $reqType = $_GET['REQUEST_TYPE'];

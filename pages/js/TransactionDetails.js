@@ -131,13 +131,80 @@ $("#formReplaceItems").submit(function (e) {
       } else {
         AlertMessage("alert-danger", "Failed to complete replacement!");
       }
-
     },
   });
 });
 
-$("#btn-print").click(function(e) {
+$("#btn-print").click(function (e) {
   e.preventDefault();
 
   window.print();
+});
+
+$(".btnEditQty").click(function (e) {
+  e.preventDefault();
+  var id = $(this).data("id");
+  var name = $(this).data("name");
+  var qty = $(this).data("qty");
+  var availableQty = $(this).data("available_qty");
+
+  var maxQtyCanUpdate = parseInt(qty, 10) + parseInt(availableQty, 10);
+
+  console.log(id);
+  console.log(name);
+  console.log(qty);
+  console.log(availableQty);
+
+  console.log(maxQtyCanUpdate);
+
+  $("#spanEditQtyName").text(name);
+
+  $("#editQtyInv_id").val(id);
+
+  $("#editQtyCurrentQty").val(qty);
+
+  $("#editQtyEditedQty").attr("min", 1).attr("max", maxQtyCanUpdate);
+
+  $("#editQtyAvailableQty").val(maxQtyCanUpdate);
+
+  $("#ModalEditQuantity").modal("show");
+});
+
+$("#formEditQuantity").submit(function (e) {
+  e.preventDefault();
+
+  var id = parseInt($("#editQtyInv_id").val(), 10);
+  var currentQty = parseInt($("#editQtyCurrentQty").val(), 10);
+  var maxQty = parseInt($("#editQtyAvailableQty").val(), 10);
+  var editedQty = parseInt($("#editQtyEditedQty").val(), 10);
+
+  if (currentQty == editedQty) {
+    hideModal();
+    $("#formEditQuantity")[0].reset();
+    return;
+  } else if (editedQty > maxQty || editedQty < 1) {
+    AlertMessage("alert-danger", "Please input valid values");
+    return;
+  } else {
+    console.log("Id: " + id);
+    console.log("Current Qty: " + currentQty);
+    console.log("maxQty: " + maxQty);
+    console.log("editedQty: " + editedQty);
+
+    var formData = $(this).serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "../backend/controller/transaction.php",
+      data: formData,
+      success: function (response) {
+        hideModal();
+        $("#formEditQuantity")[0].reset();
+        console.log(response);
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      },
+    });
+  }
 });

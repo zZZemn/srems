@@ -162,11 +162,26 @@ if (isset($_GET['tId'])) {
                             $replacedItemQty += $ReplacedItemQty['replaced_qty'];
                         }
 
+                        $getInvAvailableQty = $query->getInvAvailableQty($inv['ID']);
+                        $AvailableQtyDetails = $getInvAvailableQty->fetch_assoc();
                     ?>
                         <tr>
                             <td><?= $td['ID'] ?></td>
                             <td><?= $inv['ITEM_NAME'] ?></td>
-                            <td><?= $td['QTY'] ?></td>
+                            <td>
+                                <?= $td['QTY'] ?>
+                                <?php
+                                if ($status !== "RETURNED") {
+                                ?>
+                                    <span class="btn btn-link d-print-none btnEditQty" style="font-size: 12px;"
+                                        data-id="<?= $td['ID'] ?>"
+                                        data-name="<?= $inv['ITEM_NAME'] ?>"
+                                        data-qty="<?= $td['QTY'] ?> "
+                                        data-available_qty="<?= $AvailableQtyDetails['RemainingQty'] ?>">Edit</span>
+                                <?php
+                                }
+                                ?>
+                            </td>
                             <td class="d-flex">
                                 <input
                                     class="form-control input-damage-qty"
@@ -311,6 +326,38 @@ if (isset($_GET['tId'])) {
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalEditQuantity">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Quantity of <span id="spanEditQtyName"></span></h5>
+            </div>
+            <form id="formEditQuantity">
+                <input type="hidden" name="REQUEST_TYPE" value="EDITQTY">
+                <input type="hidden" id="editQtyInv_id" name="inv_id">
+                <input type="hidden" id="editQtyAvailableQty" name="max_qty">
+
+                <div class="modal-body">
+                    <div class="mt-2">
+                        <label for="editQtyCurrentQty">Current Quantity</label>
+                        <input type="text" class="form-control mt-1" id="editQtyCurrentQty" readonly>
+                    </div>
+                    <div class="mt-2">
+                        <label for="editQtyEditedQty">Edited Quantity</label>
+                        <input type="number" class="form-control mt-1" name="qty" id="editQtyEditedQty" placeholder="Quantity" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
 <input type="hidden" id="txtHiddenTCode" value="<?= $tCode ?>">
