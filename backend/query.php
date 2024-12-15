@@ -683,10 +683,9 @@ class Query extends db_connect
         JOIN `students` AS s
           ON t.STUDENT_ID = s.ID
         WHERE s.STUDENT_CODE = ?
-          
-        ");
-
-        // AND t.DATE = CURDATE()
+        AND DATE(t.DATE) = CURDATE()
+    ");
+        
         if ($query) {
 
             $query->bind_param('s', $studCode);
