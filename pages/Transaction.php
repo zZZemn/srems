@@ -3,6 +3,8 @@
 include("components/header.php");
 $getTransaction = $query->getAll('transaction');
 
+$query->getOverdueTransaction();
+
 ?>
 <div class="d-flex justify-content-between align-items-center">
     <h4 class="text-primary">Transaction</h4>

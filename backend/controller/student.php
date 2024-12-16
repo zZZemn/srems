@@ -191,6 +191,22 @@ if (isset($_POST['REQUEST_TYPE'])) {
         if ($getStudent->num_rows > 0) {
             $student = $getStudent->fetch_assoc();
 
+            $checkOverdue = $query->getByField('overdue_records', 'STUDENT_ID', $student['ID']);
+
+            if ($checkOverdue->num_rows > 0) {
+                $overDueDetails = $checkOverdue->fetch_assoc();
+                if (isset($overDueDetails['DATE'])) {
+                    $dueDate = new DateTime($overDueDetails['DATE']);
+                    $currentDate = new DateTime();
+                    $interval = $currentDate->diff($dueDate);
+
+                    if ($interval->days < 7) {
+                        echo 400;
+                        exit;
+                    }
+                }
+            }
+
             header('Content-Type: application/json');
             echo json_encode($student);
         } else {

@@ -1016,4 +1016,36 @@ class Query extends db_connect
             die("Preparation failed: " . $this->conn->error);
         }
     }
+
+
+    // Overdue Records
+
+    public function getOverdueTransaction()
+    {
+        $query = $this->conn->prepare("INSERT INTO `overdue_records` (`STUDENT_ID`, `TRANSACTION_ID`, `DATE`)
+        SELECT 
+            t.`STUDENT_ID`, 
+            t.`ID`, 
+            CURDATE()
+        FROM 
+            `transaction` t
+        LEFT JOIN 
+            `overdue_records` o
+        ON 
+            t.`ID` = o.`TRANSACTION_ID`
+        WHERE 
+            t.`DUEDATE` < CURDATE() 
+            AND o.`TRANSACTION_ID` IS NULL;
+        ");
+
+        if ($query) {
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
 }
