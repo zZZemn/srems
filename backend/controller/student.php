@@ -67,10 +67,45 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 } else {
                     echo "File upload error: " . $uploadResponse['message'];
                 }
-
             } else {
                 echo $query->addStudent($_POST);
             }
+        }
+    } elseif ($reqType == 'ADDSTUDENTV2') {
+        $code = $_POST['STUDENT_CODE'];
+
+        $getStudent = $query->getInStudentListByCode($code);
+        if ($getStudent->num_rows > 0) {
+
+            $studentDetails = $getStudent->fetch_assoc();
+
+            $checkCode = $query->getByField('students', 'STUDENT_CODE', $studentDetails['STUDENT_CODE']);
+            $checkEmail = $query->getByField('students', 'EMAIL', $studentDetails['EMAIL']);
+            $checkName = $query->getByField('students', 'NAME', $studentDetails['NAME']);
+            $checkNo = $query->getByField('students', 'CONTACT_NO', $studentDetails['CONTACT_NO']);
+
+            if ($checkCode->num_rows > 0) {
+                echo 'CODE_EXIST';
+            } elseif ($checkEmail->num_rows > 0) {
+                echo 'EMAIL_EXIST';
+            } elseif ($checkName->num_rows > 0) {
+                echo 'NAME_EXIST';
+            } elseif ($checkNo->num_rows > 0) {
+                echo 'CONTACTNO_EXIST';
+            } else {
+                $studentData = [
+                    'studentCode' => $studentDetails['STUDENT_CODE'],
+                    'studentName' => $studentDetails['NAME'],
+                    'studentEmail' => $studentDetails['EMAIL'],
+                    'studentContactNo' => $studentDetails['CONTACT_NO'],
+                    'studentYear' => $studentDetails['YEAR'],
+                    'studentSection' => $studentDetails['SECTION'],
+                ];
+
+                echo $query->addStudentV2($studentData);
+            }
+        } else {
+            echo 400;
         }
     } elseif ($reqType == 'EDITSTUDENT') {
 
@@ -126,7 +161,6 @@ if (isset($_POST['REQUEST_TYPE'])) {
                 } else {
                     echo "File upload error: " . $uploadResponse['message'];
                 }
-
             } else {
                 echo $query->editStudent($_POST);
             }

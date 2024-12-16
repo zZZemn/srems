@@ -143,6 +143,25 @@ class Query extends db_connect
         }
     }
 
+    public function addStudentV2($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
+
+
+        if ($query) {
+            $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
+
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
     public function editStudent($post)
     {
         if (isset($post['image_path'])) {
@@ -929,6 +948,64 @@ class Query extends db_connect
 
         if ($query) {
             $query->bind_param('s', $post['name']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+
+
+
+    // Student list
+
+    public function getInStudentListByCode($code)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `students_list` WHERE `STUDENT_CODE` = ?");
+
+        if ($query) {
+
+            $query->bind_param('s', $code);
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                return $result;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+    public function editInStudentList($post)
+    {
+        $query = $this->conn->prepare("UPDATE `students_list` SET `STUDENT_CODE` = ?, `NAME` = ?, `EMAIL` = ?, `CONTACT_NO` = ?, `YEAR` = ?, `SECTION` = ? WHERE `ID` = ?");
+
+        if ($query) {
+            $query->bind_param("ssssisi", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['ID']);
+
+            if ($query->execute()) {
+                return 200;
+            } else {
+                die("Execution failed: " . $query->error);
+            }
+        } else {
+            die("Preparation failed: " . $this->conn->error);
+        }
+    }
+
+    public function addInStudentList($post)
+    {
+        $query = $this->conn->prepare("INSERT INTO `students_list` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
+
+        if ($query) {
+            $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
 
             if ($query->execute()) {
                 return 200;

@@ -1,13 +1,13 @@
-const loadStudent = (search, status) => {
+const loadStudent = () => {
   $.ajax({
     type: "GET",
-    url: "../backend/controller/student.php",
+    url: "../backend/controller/studentList.php",
     data: {
       REQUEST_TYPE: "GETSTUDENTS",
-      search: search,
-      status: status,
     },
     success: function (response) {
+      console.log(response);
+
       const $tableBody = $("#studentTableBody");
 
       $tableBody.empty();
@@ -17,32 +17,10 @@ const loadStudent = (search, status) => {
           const $row = $("<tr>");
 
           $row.append($("<td>").text(student.ID));
-          $row.append(
-            $("<td>").html(
-              "<a href='StudentDetails.php?sId=" +
-                student.ID +
-                "'>" +
-                student.STUDENT_CODE +
-                "</a>"
-            )
-          );
-          $row.append(
-            $("<td>").html(
-              "<img src='../student-photos/" +
-                student.IMG +
-                "' class='btn-item-image' style='height: 30px; width: 30px; cursor: zoom-in;'>"
-            )
-          );
+          $row.append($("<td>").text(student.STUDENT_CODE));
           $row.append($("<td>").text(student.NAME));
           $row.append($("<td>").text(student.EMAIL));
           $row.append($("<td>").text(student.CONTACT_NO));
-          $row.append(
-            $("<td>").text(
-              student.STATUS === "ACTIVE" ? "Active" : "Deactivated"
-            )
-          );
-
-          //
           const $actionTd = $("<td>");
 
           const $editButton = $("<button>")
@@ -64,9 +42,9 @@ const loadStudent = (search, status) => {
                 ? "btn btn-danger btn-sm"
                 : "btn btn-success btn-sm"
             )
-            .text(student.STATUS === "ACTIVE" ? "Deactivate" : "Activate")
+            .text("Delete")
             .css("font-size", "12px")
-            .attr("id", "btnDeactivate")
+            .attr("id", "btnDelete")
             .attr("data-id", student.ID)
             .attr("data-status", student.STATUS);
 
@@ -95,10 +73,10 @@ const loadStudent = (search, status) => {
 };
 
 // Add Student
-// $("#btnAddStudent").click(function (e) {
-//   e.preventDefault();
-//   $("#ModalAddStudent").modal("show");
-// });
+$("#btnAddStudent").click(function (e) {
+  e.preventDefault();
+  $("#ModalAddStudent").modal("show");
+});
 
 $("#formAddStudent").submit(function (e) {
   e.preventDefault();
@@ -107,7 +85,7 @@ $("#formAddStudent").submit(function (e) {
   var formData = new FormData(this);
 
   $.ajax({
-    url: "../backend/controller/student.php",
+    url: "../backend/controller/studentList.php",
     type: "POST",
     data: formData,
     contentType: false,
@@ -118,10 +96,7 @@ $("#formAddStudent").submit(function (e) {
         AlertMessage("alert-success", "Student Added!");
         $("#formAddStudent")[0].reset();
 
-        const search = $("#inputSearch").val();
-        const status = $("#selectStatus").val();
-
-        loadStudent(search, status);
+        loadStudent();
       } else {
         if (response == "CODE_EXIST") {
           AlertMessage("alert-danger", "This code already exists!");
@@ -169,18 +144,11 @@ $(document).on("click", "#btnEditStudent", function (e) {
 $("#formEditStudent").submit(function (e) {
   e.preventDefault();
 
-  // const ID = $("#eStudentId").val();
-  // const STUDENT_CODE = $("#eStudentCode").val();
-  // const NAME = $("#eStudentName").val();
-  // const EMAIL = $("#eStudentEmail").val();
-  // const CONTACT_NO = $("#eStudentContactNo").val();
-
-  // var formData = $(this).serialize();
   var formData = new FormData(this);
 
   $.ajax({
     type: "POST",
-    url: "../backend/controller/student.php",
+    url: "../backend/controller/studentList.php",
     data: formData,
     contentType: false,
     processData: false,
@@ -191,10 +159,7 @@ $("#formEditStudent").submit(function (e) {
         $("#formEditStudent")[0].reset();
         hideModal();
 
-        const search = $("#inputSearch").val();
-        const status = $("#selectStatus").val();
-
-        loadStudent(search, status);
+        loadStudent();
       } else {
         if (response == "CODE_EXIST") {
           AlertMessage("alert-danger", "This code already exists!");
@@ -216,14 +181,11 @@ $("#formEditStudent").submit(function (e) {
 });
 // End
 
-// Deactivate
-$(document).on("click", "#btnDeactivate", function (e) {
+// Delete
+$(document).on("click", "#btnDelete", function (e) {
   const ID = $(this).data("id");
-  const STATUS = $(this).data("status");
 
-  const confirmation = confirm(
-    "Are you sure you want to change the student's status?"
-  );
+  const confirmation = confirm("Are you sure you want to delete this student");
 
   if (!confirmation) {
     return;
@@ -231,24 +193,19 @@ $(document).on("click", "#btnDeactivate", function (e) {
 
   $.ajax({
     type: "POST",
-    url: "../backend/controller/student.php",
+    url: "../backend/controller/studentList.php",
     data: {
-      REQUEST_TYPE: "DEACTIVATE",
+      REQUEST_TYPE: "DELETE",
       ID: ID,
-      STATUS: STATUS,
     },
     success: function (response) {
       console.log(response);
 
       if (response == 200) {
-        AlertMessage("alert-success", "Student status change");
-
-        const search = $("#inputSearch").val();
-        const status = $("#selectStatus").val();
-
-        loadStudent(search, status);
+        AlertMessage("alert-success", "Student deleted!");
+        loadStudent();
       } else {
-        AlertMessage("alert-danger", "Failed to change status!");
+        AlertMessage("alert-danger", "Failed to delete status!");
       }
     },
     error: function (xhr, status, error) {
@@ -258,111 +215,4 @@ $(document).on("click", "#btnDeactivate", function (e) {
 });
 // End
 
-$("#selectStatus").change(function (e) {
-  e.preventDefault();
-  const search = $("#inputSearch").val();
-  const status = $("#selectStatus").val();
-
-  loadStudent(search, status);
-});
-
-$("#inputSearch").on("input", function (e) {
-  const search = $("#inputSearch").val();
-  const status = $("#selectStatus").val();
-
-  loadStudent(search, status);
-});
-
-// Show image
-$(document).on("click", ".btn-item-image", function (e) {
-  e.preventDefault();
-  var src = $(this).attr("src");
-
-  $("#ModalItemImageImg").attr("src", src);
-  $("#ModalViewItemImage").modal("show");
-  console.log(src);
-});
-
-// Add Student V2
-
-const searchInStudentListUsingBarCode = (code) => {
-  $.ajax({
-    type: "GET",
-    url: "../backend/controller/studentList.php",
-    data: {
-      REQUEST_TYPE: "GETSTUDENTUSINGCODE",
-      STUDENT_CODE: code,
-    },
-    success: function (response) {
-      if (response != "400") {
-        console.log(response);
-        $("#resultName").text(response.NAME);
-        $("#btnSaveAddStudentV2").attr("disabled", false);
-      } else {
-        $("#resultName").text("");
-        $("#btnSaveAddStudentV2").attr("disabled", true);
-      }
-    },
-  });
-};
-
-$("#btnAddStudent").click(function (e) {
-  e.preventDefault();
-  $("#btnSaveAddStudentV2").attr("disabled", true);
-  $("#ModalAddStudentV2").modal("show");
-});
-
-$("#btnClearBarcodeV2").click(function (e) {
-  e.preventDefault();
-  $("#studentCodeV2").val("");
-});
-
-$("#studentCodeV2").on("input", function (e) {
-  searchInStudentListUsingBarCode($(this).val());
-  $(this).val($(this).val());
-});
-
-$("#formAddStudentV2").submit(function (e) {
-  e.preventDefault();
-
-  var code = $("#studentCodeV2").val();
-
-  $.ajax({
-    type: "POST",
-    url: "../backend/controller/student.php",
-    data: {
-      REQUEST_TYPE: "ADDSTUDENTV2",
-      STUDENT_CODE: code,
-    },
-    success: function (response) {
-      console.log(response);
-      if (response == "200") {
-        AlertMessage("alert-success", "Student Added!");
-
-        const search = $("#inputSearch").val();
-        const status = $("#selectStatus").val();
-
-        loadStudent(search, status);
-
-        hideModal();
-        $("#formAddStudentV2")[0].reset();
-      } else {
-        if (response == "CODE_EXIST") {
-          AlertMessage("alert-danger", "This code already exists!");
-        } else if (response == "EMAIL_EXIST") {
-          AlertMessage("alert-danger", "This email is already in use!");
-        } else if (response == "NAME_EXIST") {
-          AlertMessage("alert-danger", "This name already exists!");
-        } else if (response == "CONTACTNO_EXIST") {
-          AlertMessage("alert-danger", "This contact number already exists!");
-        } else {
-          AlertMessage("alert-danger", "Failed to add student!");
-        }
-      }
-    },
-  });
-});
-
-// Add Student V2 End
-
-loadStudent("", "ALL");
+loadStudent();

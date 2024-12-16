@@ -1,24 +1,15 @@
 <?php
 
 include("components/header.php");
-$getStudents = $query->getAll('students');
+$getStudents = $query->getAll('students_list');
 
 ?>
 <div class="d-flex justify-content-between align-items-center">
-    <h4 class="text-primary">Students</h4>
+    <h4 class="text-primary">Students List Database</h4>
     <div>
-        <a href="StudentList.php" class="btn btn-sm btn-dark">View Student List Database</a>
+        <a href="Students.php" class="btn btn-sm btn-dark">Back To System Students</a>
         <button class="btn btn-sm btn-primary" id="btnAddStudent"><i class="bi bi-plus-lg"></i> Add</button>
     </div>
-</div>
-
-<div class="d-flex justify-content-end mt-2">
-    <select name="status" id="selectStatus" class="form-control" style="width: 100px;">
-        <option value="ALL">All</option>
-        <option value="ACTIVE">Active</option>
-        <option value="INACTIVE">Deactivated</option>
-    </select>
-    <input type="search" class="form-control ms-1" id="inputSearch" placeholder="Search..." style="width: 300px">
 </div>
 
 <table class="table table-sm table-striped" style="font-size: 12px;">
@@ -26,11 +17,9 @@ $getStudents = $query->getAll('students');
         <tr>
             <th>ID</th>
             <th>Student Code</th>
-            <th></th>
             <th>Name</th>
             <th>Email</th>
             <th>Contact No.</th>
-            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -86,10 +75,10 @@ $getStudents = $query->getAll('students');
                             <option value="F">F</option>
                         </select>
                     </div>
-                    <div class="mt-3">
+                    <!-- <div class="mt-3">
                         <label for="studentImage">Student Image:</label>
                         <input type="file" class="form-control mt-1" name="studentImage" id="studentImage" accept="image/*">
-                    </div>
+                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -148,10 +137,10 @@ $getStudents = $query->getAll('students');
                             <option value="F">F</option>
                         </select>
                     </div>
-                    <div class="mt-3">
+                    <!-- <div class="mt-3">
                         <label for="studentImage">Student Image:</label>
                         <input type="file" class="form-control mt-1" name="studentImage" id="studentImage" accept="image/*">
-                    </div>
+                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -173,41 +162,8 @@ $getStudents = $query->getAll('students');
     </div>
 </div>
 
-
-
-<div class="modal fade" tabindex="-1" role="dialog" id="ModalAddStudentV2">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-person-plus-fill"></i> Add Student</h5>
-            </div>
-            <form id="formAddStudentV2">
-                <input type="hidden" name="REQUEST_TYPE" value="ADDSTUDENTV2">
-                <div class="modal-body">
-                    <div>
-                        <h5 class="" id="resultName"></h5>
-                    </div>
-                    <div class="">
-                        <label for="studentCodeV2">Student Code:</label>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <input type="text" class="form-control mt-1" name="studentCode" id="studentCodeV2" placeholder="Input / Scan Bar Code" required>
-                            <button id="btnClearBarcodeV2" class="btn btn-dark mt-1 ms-1">Clear</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="btnSaveAddStudentV2" disabled>Save</button>
-                    <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
 <?php include("components/footer.php") ?>
-<script src="js/Students.js"></script>
+<script src="js/StudentList.js"></script>
 </body>
 
 </html>
