@@ -70,7 +70,7 @@ $getCategories = $query->getAll('categories');
                     </div>
                     <div class="mt-3">
                         <label for="inventoryQty">Qty:</label>
-                        <input type="number" class="form-control mt-1" name="inventoryQty" id="inventoryQty" required>
+                        <input type="number" class="form-control mt-1" name="inventoryQty" id="inventoryQty" min="1" required>
                     </div>
                     <div class="mt-3">
                         <label for="inventoryCategory">Category:</label>
@@ -121,7 +121,7 @@ $getCategories = $query->getAll('categories');
                     </div>
                     <div class="mt-3">
                         <label for="inventoryQty">Qty:</label>
-                        <input type="number" class="form-control mt-1" name="inventoryQty" id="eInventoryQty" required>
+                        <input type="number" class="form-control mt-1" name="inventoryQty" id="eInventoryQty" min="1" required>
                     </div>
                     <div class="mt-3">
                         <label for="inventoryCategory">Category:</label>

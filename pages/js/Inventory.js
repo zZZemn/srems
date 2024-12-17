@@ -47,7 +47,8 @@ const loadInventory = (search, category) => {
             .attr("data-invcode", inv.INV_CODE)
             .attr("data-itemname", inv.ITEM_NAME)
             .attr("data-qty", inv.QTY)
-            .attr("data-category", inv.CATEGORY);
+            .attr("data-category", inv.CATEGORY)
+            .attr("data-remainingqty", inv.REMAINING_QTY);
 
           const $deactivateButton = $("<button>")
             .addClass(
@@ -141,12 +142,17 @@ $(document).on("click", "#btnEditInventory", function (e) {
   const ITEM_NAME = $(this).data("itemname");
   const QTY = $(this).data("qty");
   const CATEGORY = $(this).data("category");
+  const REMAINING_QTY = $(this).data("remainingqty");
 
   $("#eInventoryId").val(ID);
   $("#eInventoryCode").val(INV_CODE);
   $("#eInventoryItem").val(ITEM_NAME);
   $("#eInventoryQty").val(QTY);
   $("#eInventoryCategory").val(CATEGORY);
+
+  var minumun = QTY - REMAINING_QTY;
+
+  $("#eInventoryQty").attr("min", minumun);
 
   $("#ModalEditInventory").modal("show");
 });
