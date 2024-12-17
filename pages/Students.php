@@ -150,7 +150,8 @@ $getStudents = $query->getAll('students');
                     </div>
                     <div class="mt-3">
                         <label for="studentImage">Student Image:</label>
-                        <input type="file" class="form-control mt-1" name="studentImage" id="studentImage" accept="image/*">
+                        <input type="file" class="form-control mt-1" name="studentImage" id="eStudentImage" accept="image/*">
+                        <button type="button" class="btn btn-primary mt-1 btnUploadUsingWebcam" id="btnEditUploadUsingWebcam">Use Webcam</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -200,6 +201,28 @@ $getStudents = $query->getAll('students');
                     <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalCaptureImage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Capture Item</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <video id="webcam" autoplay playsinline width="320" height="240" style="border: 1px solid black;"></video>
+                    <br />
+                    <button id="capture" class="btn btn-sm btn-dark">Capture Image</button>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary btnCloseCaptureModal" id="btnCloseCaptureModal" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

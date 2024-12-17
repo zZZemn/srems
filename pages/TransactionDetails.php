@@ -286,6 +286,7 @@ if (isset($_GET['tId'])) {
                     <div>
                         <label for="rtnItemImg">Upload a Picture</label>
                         <input type="file" class="form-control mt-1" name="rtnItemImg" id="rtnItemImg" accept="image/*" required>
+                        <button type="button" class="btn btn-primary mt-1 btnUploadUsingWebcam" id="btnAddUploadUsingWebcam">Use Webcam</button>
                     </div>
                     <div class="mt-2">
                         <label for="rtnRemarks">Remarks</label>
@@ -362,6 +363,31 @@ if (isset($_GET['tId'])) {
 
 <input type="hidden" id="txtHiddenTCode" value="<?= $tCode ?>">
 
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalCaptureImage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Capture Item</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <video id="webcam" autoplay playsinline width="320" height="240" style="border: 1px solid black;"></video>
+                    <br />
+                    <button id="capture" class="btn btn-sm btn-dark">Capture Image</button>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <!-- <br />
+                    <img id="imagePreview" alt="Captured Image" style="display: none; max-width: 320px; border: 1px solid black;" />
+                    <br /> -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+                <button type="reset" class="btn btn-secondary btnCloseCaptureModal" id="btnCloseCaptureModal" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <?php include("components/footer.php") ?>

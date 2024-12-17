@@ -365,4 +365,74 @@ $("#formAddStudentV2").submit(function (e) {
 
 // Add Student V2 End
 
+
+// ----
+const video = $("#webcam")[0];
+const canvas = $("#canvas")[0];
+var fileInput = $("#eStudentImage");
+
+$("#btnEditUploadUsingWebcam").click(function (e) {
+  e.preventDefault();
+
+  navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+    })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Failed to access webcam:", err);
+      alert("Could not access webcam. Make sure you have granted permissions.");
+    });
+
+  $("#ModalCaptureImage").modal("show");
+});
+
+$(".btnCloseCaptureModal").click(function (e) {
+  e.preventDefault();
+
+  $("#ModalCaptureImage").modal("hide");
+
+  const video = $("#webcam")[0];
+
+  const stream = video.srcObject;
+  const tracks = stream.getTracks();
+  tracks.forEach((track) => track.stop());
+
+  video.srcObject = null;
+  console.log("Webcam stream stopped.");
+});
+
+$("#capture").click(() => {
+  const context = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob((blob) => {
+    const file = new File([blob], "captured-image.png", {
+      type: "image/png",
+    });
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    fileInput[0].files = dataTransfer.files;
+
+    console.log("Captured image set to file input:", fileInput[0].files[0]);
+
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => track.stop());
+
+    video.srcObject = null;
+    console.log("Webcam stream stopped.");
+
+    $("#ModalCaptureImage").modal("hide");
+  });
+});
+
+
 loadStudent("", "ALL");
