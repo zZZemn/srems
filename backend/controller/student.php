@@ -72,7 +72,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
             }
         }
     } elseif ($reqType == 'ADDSTUDENTV2') {
-        $code = $_POST['STUDENT_CODE'];
+        $code = $_POST['studentCode'];
 
         $getStudent = $query->getInStudentListByCode($code);
         if ($getStudent->num_rows > 0) {
@@ -93,16 +93,38 @@ if (isset($_POST['REQUEST_TYPE'])) {
             } elseif ($checkNo->num_rows > 0) {
                 echo 'CONTACTNO_EXIST';
             } else {
-                $studentData = [
-                    'studentCode' => $studentDetails['STUDENT_CODE'],
-                    'studentName' => $studentDetails['NAME'],
-                    'studentEmail' => $studentDetails['EMAIL'],
-                    'studentContactNo' => $studentDetails['CONTACT_NO'],
-                    'studentYear' => $studentDetails['YEAR'],
-                    'studentSection' => $studentDetails['SECTION'],
-                ];
 
-                echo $query->addStudentV2($studentData);
+                if (isset($_FILES['studentImage']) && $_FILES['studentImage']['error'] === UPLOAD_ERR_OK) {
+                    $uploadFile = fileUpload($_FILES);
+                    $uploadResponse = json_decode($uploadFile, true);
+
+                    if ($uploadResponse['status'] == 200) {
+                        $studentData = [
+                            'studentCode' => $studentDetails['STUDENT_CODE'],
+                            'studentName' => $studentDetails['NAME'],
+                            'studentEmail' => $studentDetails['EMAIL'],
+                            'studentContactNo' => $studentDetails['CONTACT_NO'],
+                            'studentYear' => $studentDetails['YEAR'],
+                            'studentSection' => $studentDetails['SECTION'],
+                            'image_path' => $uploadResponse['file_name']
+                        ];
+
+                        echo $query->addStudentV2($studentData);
+                    } else {
+                        echo "File upload error: " . $uploadResponse['message'];
+                    }
+                } else {
+                    $studentData = [
+                        'studentCode' => $studentDetails['STUDENT_CODE'],
+                        'studentName' => $studentDetails['NAME'],
+                        'studentEmail' => $studentDetails['EMAIL'],
+                        'studentContactNo' => $studentDetails['CONTACT_NO'],
+                        'studentYear' => $studentDetails['YEAR'],
+                        'studentSection' => $studentDetails['SECTION'],
+                    ];
+
+                    echo $query->addStudentV2($studentData);
+                }
             }
         } else {
             echo 400;

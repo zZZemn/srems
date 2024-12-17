@@ -327,13 +327,14 @@ $("#formAddStudentV2").submit(function (e) {
 
   var code = $("#studentCodeV2").val();
 
+  var formData = new FormData(this);
+
   $.ajax({
     type: "POST",
     url: "../backend/controller/student.php",
-    data: {
-      REQUEST_TYPE: "ADDSTUDENTV2",
-      STUDENT_CODE: code,
-    },
+    data: formData,
+    contentType: false,
+    processData: false,
     success: function (response) {
       console.log(response);
       if (response == "200") {
@@ -365,14 +366,34 @@ $("#formAddStudentV2").submit(function (e) {
 
 // Add Student V2 End
 
-
 // ----
 const video = $("#webcam")[0];
 const canvas = $("#canvas")[0];
 var fileInput = $("#eStudentImage");
 
+$("#btnAddUploadUsingWebcam").click(function (e) {
+  e.preventDefault();
+  fileInput = $("#AddStudentImage");
+
+  navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+    })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Failed to access webcam:", err);
+      alert("Could not access webcam. Make sure you have granted permissions.");
+    });
+
+  $("#ModalCaptureImage").modal("show");
+});
+
 $("#btnEditUploadUsingWebcam").click(function (e) {
   e.preventDefault();
+
+  fileInput = $("#eStudentImage");
 
   navigator.mediaDevices
     .getUserMedia({
@@ -433,6 +454,5 @@ $("#capture").click(() => {
     $("#ModalCaptureImage").modal("hide");
   });
 });
-
 
 loadStudent("", "ALL");

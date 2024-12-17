@@ -145,12 +145,21 @@ class Query extends db_connect
 
     public function addStudentV2($post)
     {
-        $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
+        // $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
+
+        if (isset($post['image_path'])) {
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`, `STATUS`) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(),'ACTIVE')");
+        } else {
+            $query = $this->conn->prepare("INSERT INTO `students` (`STUDENT_CODE`, `NAME`, `EMAIL`, `CONTACT_NO`, `YEAR`, `SECTION`, `IMG`, `DATE_ADDED`,`STATUS`) VALUES (?, ?, ?, ?, ?, ?, 'default.png', CURDATE(),'ACTIVE')");
+        }
 
 
         if ($query) {
-            $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
-
+            if (isset($post['image_path'])) {
+                $query->bind_param("ssssiss", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection'], $post['image_path']);
+            } else {
+                $query->bind_param("ssssis", $post['studentCode'], $post['studentName'], $post['studentEmail'], $post['studentContactNo'], $post['studentYear'], $post['studentSection']);
+            }
 
             if ($query->execute()) {
                 return 200;

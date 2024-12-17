@@ -195,6 +195,12 @@ $getStudents = $query->getAll('students');
                             <button id="btnClearBarcodeV2" class="btn btn-dark mt-1 ms-1">Clear</button>
                         </div>
                     </div>
+
+                    <div class="mt-3">
+                        <label for="AddStudentImage">Student Image:</label>
+                        <input type="file" class="form-control mt-1" name="studentImage" id="AddStudentImage" accept="image/*">
+                        <button type="button" class="btn btn-primary mt-1 btnUploadUsingWebcam" id="btnAddUploadUsingWebcam">Use Webcam</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="btnSaveAddStudentV2" disabled>Save</button>
