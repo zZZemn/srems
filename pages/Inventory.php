@@ -88,6 +88,8 @@ $getCategories = $query->getAll('categories');
                     <div class="mt-3">
                         <label for="inventoryImage">Item Image:</label>
                         <input type="file" class="form-control mt-1" name="inventoryImage" id="inventoryImage" accept="image/*">
+
+                        <button class="btn btn-primary mt-1 btnUploadUsingWebcam" id="btnAddUploadUsingWebcam">Use Webcam</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -136,7 +138,8 @@ $getCategories = $query->getAll('categories');
                     </div>
                     <div class="mt-3">
                         <label for="inventoryImage">Change Image:</label>
-                        <input type="file" class="form-control mt-1" name="inventoryImage" id="inventoryImage" accept="image/*">
+                        <input type="file" class="form-control mt-1" name="inventoryImage" id="eInventoryImage" accept="image/*">
+                        <button type="button" class="btn btn-primary mt-1 btnUploadUsingWebcam" id="btnEditUploadUsingWebcam">Use Webcam</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -179,6 +182,34 @@ $getCategories = $query->getAll('categories');
                     <button type="reset" class="btn btn-secondary btnCloseModal" id="btnCloseModal" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<!--  -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalCaptureImage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Capture Item</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <video id="webcam" autoplay playsinline width="320" height="240" style="border: 1px solid black;"></video>
+                    <br />
+                    <button id="capture" class="btn btn-sm btn-dark">Capture Image</button>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <!-- <br />
+                    <img id="imagePreview" alt="Captured Image" style="display: none; max-width: 320px; border: 1px solid black;" />
+                    <br /> -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+                <button type="reset" class="btn btn-secondary btnCloseCaptureModal" id="btnCloseCaptureModal" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

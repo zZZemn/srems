@@ -292,4 +292,102 @@ const downloadCSV = (csv, filename) => {
 
 // Export End
 
+// ----
+const video = $("#webcam")[0];
+const canvas = $("#canvas")[0];
+// const imgPreview = $("#imagePreview");
+var fileInput = $("#inventoryImage");
+
+//
+$("#btnAddUploadUsingWebcam").click(function (e) {
+  e.preventDefault();
+
+  fileInput = $("#inventoryImage");
+
+  navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+    })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Failed to access webcam:", err);
+      alert("Could not access webcam. Make sure you have granted permissions.");
+    });
+
+  $("#ModalCaptureImage").modal("show");
+});
+
+$("#btnEditUploadUsingWebcam").click(function (e) {
+  e.preventDefault();
+
+  fileInput = $("#eInventoryImage");
+
+  navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+    })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Failed to access webcam:", err);
+      alert("Could not access webcam. Make sure you have granted permissions.");
+    });
+
+  $("#ModalCaptureImage").modal("show");
+});
+
+$(".btnCloseCaptureModal").click(function (e) {
+  e.preventDefault();
+
+  $("#ModalCaptureImage").modal("hide");
+
+  const video = $("#webcam")[0];
+
+  const stream = video.srcObject;
+  const tracks = stream.getTracks();
+  tracks.forEach((track) => track.stop());
+
+  video.srcObject = null;
+  console.log("Webcam stream stopped.");
+});
+
+$("#capture").click(() => {
+  const context = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // const imageDataURL = canvas.toDataURL("image/png");
+
+  // imgPreview.attr("src", imageDataURL).show();
+
+  canvas.toBlob((blob) => {
+    const file = new File([blob], "captured-image.png", {
+      type: "image/png",
+    });
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    fileInput[0].files = dataTransfer.files;
+
+    console.log("Captured image set to file input:", fileInput[0].files[0]);
+
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => track.stop());
+
+    video.srcObject = null;
+    console.log("Webcam stream stopped.");
+
+    $("#ModalCaptureImage").modal("hide");
+  });
+});
+
+// ----
+
 loadInventory("", "ALL");
