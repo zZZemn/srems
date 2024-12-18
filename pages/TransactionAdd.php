@@ -157,9 +157,12 @@ $venues = $query->getAll('venues');
 
                     <div class="mt-2">
                         <label for="AddItemItemName">Item</label>
-                        <select name="category" id="AddItemItemNameSelect" class="form-control" required>
-                            <option value=""></option>
-                        </select>
+                        <div class="d-flex">
+                            <select name="category" id="AddItemItemNameSelect" class="form-control" required>
+                                <option value=""></option>
+                            </select>
+                            <input type="number" id="AddItemQuantity" placeholder="Qty" class="form-control ms-2" style="width: 100px;" disabled min="1">
+                        </div>
                     </div>
 
                     <div class="">

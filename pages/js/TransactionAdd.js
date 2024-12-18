@@ -192,6 +192,7 @@ $("#btnAddItem").click(function (e) {
 
 $("#AddItemSelectCategory").change(function (e) {
   e.preventDefault();
+  $("#AddItemQuantity").attr("disabled", true);
   loadItemSelectList($(this).val());
 });
 
@@ -207,6 +208,12 @@ $("#AddItemItemNameSelect").change(function (e) {
   $("#hiddenItemId").val(invID);
   $("#hiddenItemQty").val(qty);
   $("#hiddenItemName").val(itemName);
+
+  if (selectedOption.val() == "") {
+    $("#AddItemQuantity").attr("disabled", true);
+  } else {
+    $("#AddItemQuantity").attr("disabled", false);
+  }
 });
 
 $("#formTransactionAddItem").submit(function (e) {
@@ -218,8 +225,20 @@ $("#formTransactionAddItem").submit(function (e) {
   const itemId = $("#hiddenItemId").val();
   const itemQty = $("#hiddenItemQty").val();
 
-  if (itemQty < 1) {
+  const inputQty = $("#AddItemQuantity").val();
+
+  if (parseInt(itemQty) < 1) {
     AlertMessage("alert-danger", "This item is out of stock");
+    return;
+  }
+
+  if (parseInt(inputQty) < 1) {
+    AlertMessage("alert-danger", "Please input valid quantity");
+    return;
+  }
+
+  if (parseInt(inputQty) > parseInt(itemQty)) {
+    AlertMessage("alert-danger", "Please input valid quantity");
     return;
   }
 
@@ -235,7 +254,7 @@ $("#formTransactionAddItem").submit(function (e) {
       itemId: parseInt(itemId),
       itemName: itemName,
       itemQty: parseInt(itemQty),
-      qty: 1,
+      qty: parseInt(inputQty),
     };
 
     if (itemsArray && itemsArray.length > 0) {
@@ -245,7 +264,7 @@ $("#formTransactionAddItem").submit(function (e) {
 
       if (index !== -1) {
         var currentQty = itemsArray[index].qty;
-        if ((currentQty += 1) > item.itemQty) {
+        if (parseInt(currentQty) + parseInt(inputQty) > item.itemQty) {
           AlertMessage(
             "alert-danger",
             "This item have reached its maximum quantity"
@@ -253,7 +272,7 @@ $("#formTransactionAddItem").submit(function (e) {
           return;
         }
 
-        itemsArray[index].qty += 1;
+        itemsArray[index].qty += parseInt(inputQty);
       } else {
         itemsArray.push(item);
       }
@@ -262,6 +281,9 @@ $("#formTransactionAddItem").submit(function (e) {
     }
 
     hideModal();
+
+    $("#AddItemQuantity").attr("disabled", true);
+    $("#AddItemQuantity").val("0");
 
     $("#AddItemSelectCategory").val("ALL");
     loadItemSelectList("ALL");
