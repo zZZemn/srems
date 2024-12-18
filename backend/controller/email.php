@@ -146,7 +146,7 @@ if (isset($_POST['REQUEST_TYPE'])) {
 
 
     } elseif ($_POST['REQUEST_TYPE'] == 'SENDEMAILOVERDUE') {
-        $getOD = $query->getTransctionsWSearch('OVERDUE', '');
+        $getOD = $query->getTransctionsWSearch('OVERDUE', '', 'ALL');
 
         if ($getOD->num_rows > 0) {
             while ($od = $getOD->fetch_assoc()) {
