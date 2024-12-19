@@ -518,6 +518,8 @@ $("#frmTransactionAdd").submit(function (e) {
             isInvalidCode = true;
             AlertMessage("alert-danger", "Invalid student code");
             return;
+          } else {
+            barrowedInfo = response;
           }
 
           if (!isInvalidCode && !isInvalidDate && !isInvalidSubmit) {
@@ -539,8 +541,11 @@ $("#frmTransactionAdd").submit(function (e) {
                 if (response == 200) {
                   AlertMessage("alert-success", "Transaction added!");
 
+                  let email = barrowedInfo.EMAIL;
+                  let name = barrowedInfo.NAME;
+
                   try {
-                    sendEmail(barrowedInfo.EMAIL, barrowedInfo.NAME, dueDate);
+                    sendEmail(email, name, dueDate);
                   } catch (e) {
                     console.error(
                       "An error occurred while sending the email:",
